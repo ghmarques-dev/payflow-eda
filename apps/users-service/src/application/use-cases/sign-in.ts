@@ -1,15 +1,16 @@
 import { Injectable } from '@nestjs/common';
 
-import { 
-  UserNotFoundError, 
+import {
+  UserNotFoundError,
   InvalidCredentialsError,
 } from '@/application/errors';
-
-import type { 
-  Encrypter, 
-  HashComparer, 
-  UsersRepository 
+import type { EventPublisher } from '@/application/ports';
+import type {
+  Encrypter,
+  HashComparer,
+  UsersRepository,
 } from '@/domain/repositories';
+import { UserAuthenticatedEvent } from '@/domain/events';
 
 export type ISignInUseCaseInput = {
   email: string;
@@ -28,6 +29,7 @@ export class SignInUseCase {
     private readonly hashComparer: HashComparer,
     private readonly usersRepository: UsersRepository,
     private readonly encrypter: Encrypter,
+    private readonly eventPublisher: EventPublisher,
   ) {}
 
   async execute(input: ISignInUseCaseInput): Promise<ISignInUseCaseOutput> {
@@ -58,11 +60,17 @@ export class SignInUseCase {
       this.encrypter.encrypt(payload),
     ]);
 
-
     await this.usersRepository.update({
       user_id: user.user_id,
       refresh_token: refreshToken,
     });
+
+    await this.eventPublisher.publish(
+      new UserAuthenticatedEvent({
+        user_id: user.user_id,
+        email: user.email,
+      }),
+    );
 
     return {
       accessToken,

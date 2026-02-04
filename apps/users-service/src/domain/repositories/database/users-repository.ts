@@ -1,28 +1,28 @@
 import type { User } from "../../entities";
 
-export interface UsersRepository {
-  create(
+export abstract class UsersRepository {
+  abstract create(
     input: UsersRepository.Create.Input
   ): Promise<UsersRepository.Create.Output>;
 
-  find_by_id(
+  abstract find_by_id(
     input: UsersRepository.FindById.Input
   ): Promise<UsersRepository.FindById.Output>;
 
-  find_by_email(
+  abstract find_by_email(
     input: UsersRepository.FindByEmail.Input
   ): Promise<UsersRepository.FindByEmail.Output>;
 
 
-  find_by_refresh_token(
+  abstract find_by_refresh_token(
     input: UsersRepository.FindByRefreshToken.Input
   ): Promise<UsersRepository.FindByRefreshToken.Output>;
 
-  update(
+  abstract update(
     input: UsersRepository.Update.Input
   ): Promise<UsersRepository.Update.Output>;
 
-  delete(
+  abstract delete(
     input: UsersRepository.Delete.Input
   ): Promise<UsersRepository.Delete.Output>;
 }

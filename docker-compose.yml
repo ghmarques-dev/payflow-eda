@@ -1,0 +1,15 @@
+version: '5'
+services:
+  users-service-db:
+    image: postgres:18-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: users-service
+    volumes:
+      - users-service-db-data:/var/lib/postgresql/data
+
+volumes:
+  users-service-db-data:

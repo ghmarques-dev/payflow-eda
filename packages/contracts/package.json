@@ -1,0 +1,18 @@
+{
+  "name": "@payflow/contracts",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./dist/index.js",
+    "./*": "./dist/*.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "check-types": "tsc --noEmit"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "devDependencies": {
+    "typescript": "5.9.2"
+  }
+}

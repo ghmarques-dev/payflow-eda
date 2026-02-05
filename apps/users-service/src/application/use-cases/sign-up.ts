@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
 import { UserAlreadyExistsError } from '@/application/errors';
-import type { EventPublisher } from '@/application/ports';
-import type { HashGenerator, UsersRepository } from '@/domain/repositories';
+import { EventPublisher } from '@/application/ports';
 import type { User } from '@/domain/entities';
+import {
+  HashGenerator,
+  UsersRepository,
+} from '@/domain/repositories';
 import { UserRegisteredEvent } from '@/domain/events';
 
 export type ISignUpUseCaseInput = {

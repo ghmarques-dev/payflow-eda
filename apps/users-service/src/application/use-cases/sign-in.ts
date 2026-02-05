@@ -4,8 +4,8 @@ import {
   UserNotFoundError,
   InvalidCredentialsError,
 } from '@/application/errors';
-import type { EventPublisher } from '@/application/ports';
-import type {
+import { EventPublisher } from '@/application/ports';
+import {
   Encrypter,
   HashComparer,
   UsersRepository,

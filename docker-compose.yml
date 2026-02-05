@@ -1,4 +1,3 @@
-version: '5'
 services:
   users-service-db:
     image: postgres:18-alpine
@@ -11,5 +10,14 @@ services:
     volumes:
       - users-service-db-data:/var/lib/postgresql/data
 
+  broker:
+    image: rabbitmq:management-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+    - broker-data:/var/lib/rabbitmq
+
 volumes:
   users-service-db-data:
+  broker-data:

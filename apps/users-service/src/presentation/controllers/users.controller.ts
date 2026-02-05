@@ -2,7 +2,10 @@ import { z } from 'zod';
 import { Body, Controller, Post, UsePipes } from '@nestjs/common';
 
 import { ZodValidationPipe } from '@/infra/pipes';
-import { HttpCreatedResponse, HttpSuccessResponse } from '@/presentation/helpers';
+import {
+  HttpCreatedResponse,
+  HttpSuccessResponse,
+} from '@/presentation/helpers';
 import {
   ControllerErrorHandlerDecorator,
   Public,
@@ -12,6 +15,7 @@ import {
   SignInUseCase,
   RefreshTokenUseCase,
 } from '@/application/use-cases';
+import { UserPresenter } from '../presenters/user-presenter';
 
 const signInSchema = z.object({
   email: z.string(),
@@ -53,7 +57,9 @@ export class UsersController {
       password: body.password,
     });
 
-    return HttpCreatedResponse(response);
+    const user = UserPresenter.toHTTP(response);
+
+    return HttpCreatedResponse(user);
   }
 
   @Post('sign-in')

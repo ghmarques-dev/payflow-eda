@@ -1,13 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
-import { 
-  RefreshTokenNotFoundError, 
-} from '@/application/errors';
+import { RefreshTokenNotFoundError } from '@/application/errors';
 
-import type { 
-  Encrypter, 
-  UsersRepository 
-} from '@/domain/repositories';
+import { Encrypter, UsersRepository } from '@/domain/repositories';
 
 export type IRefreshTokenUseCaseInput = {
   refresh_token: string;
@@ -25,7 +20,9 @@ export class RefreshTokenUseCase {
     private readonly encrypter: Encrypter,
   ) {}
 
-  async execute(input: IRefreshTokenUseCaseInput): Promise<IRefreshTokenUseCaseOutput> {
+  async execute(
+    input: IRefreshTokenUseCaseInput,
+  ): Promise<IRefreshTokenUseCaseOutput> {
     const user = await this.usersRepository.find_by_refresh_token({
       refresh_token: input.refresh_token,
     });

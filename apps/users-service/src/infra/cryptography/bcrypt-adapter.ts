@@ -1,9 +1,6 @@
 import bcrypt from 'bcrypt';
 
-import {
-  HashComparer,
-  HashGenerator,
-} from '@/domain/repositories';
+import { HashComparer, HashGenerator } from '@/domain/repositories';
 
 export class BcryptAdapter implements HashGenerator, HashComparer {
   constructor(private readonly salt: number = 12) {}

@@ -49,7 +49,9 @@ export class InMemoryUsersRepository implements UsersRepository {
   async find_by_refresh_token(
     input: UsersRepository.FindByRefreshToken.Input,
   ): Promise<UsersRepository.FindByRefreshToken.Output> {
-    const user = this.users.find((user) => user.refresh_token === input.refresh_token);
+    const user = this.users.find(
+      (user) => user.refresh_token === input.refresh_token,
+    );
 
     return user || null;
   }

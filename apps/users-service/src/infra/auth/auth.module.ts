@@ -6,10 +6,7 @@ import { AuthGuard } from './auth.guard';
 
 @Module({
   imports: [EnvModule],
-  providers: [
-    EnvService,
-    { provide: APP_GUARD, useClass: AuthGuard },
-  ],
+  providers: [EnvService, { provide: APP_GUARD, useClass: AuthGuard }],
   exports: [EnvService],
 })
 export class AuthModule {}

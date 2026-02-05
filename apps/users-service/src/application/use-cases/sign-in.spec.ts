@@ -1,14 +1,12 @@
-import {
-  Encrypter,
-  UsersRepository
-} from '@/domain/repositories';
+import { Encrypter, UsersRepository } from '@/domain/repositories';
 
 import { InMemoryUsersRepository } from '@/application/repositories/database';
 import {
   HashComparerSpy,
-  EncrypterSpy
+  EncrypterSpy,
 } from '@/application/repositories/cryptography';
 import { InMemoryEventPublisher } from '@/infra/messaging';
+import { USER_AUTHENTICATED_EVENT_TYPE } from '@payflow/contracts';
 
 import { SignInUseCase } from './sign-in';
 import {
@@ -146,7 +144,8 @@ describe('sign in use case', () => {
 
   it('should be able to call users repository update with correct values', async () => {
     const usersRepositorySpy = jest.spyOn(usersRepository, 'update');
-    jest.spyOn(encrypter, 'encrypt')
+    jest
+      .spyOn(encrypter, 'encrypt')
       .mockResolvedValueOnce('access-token')
       .mockResolvedValueOnce('refresh-token');
 
@@ -162,7 +161,8 @@ describe('sign in use case', () => {
   });
 
   it('should publish UserAuthenticated event after successful sign in', async () => {
-    jest.spyOn(encrypter, 'encrypt')
+    jest
+      .spyOn(encrypter, 'encrypt')
       .mockResolvedValueOnce('access-token')
       .mockResolvedValueOnce('refresh-token');
 
@@ -173,7 +173,7 @@ describe('sign in use case', () => {
 
     expect(eventPublisher.publishedEvents).toHaveLength(1);
     const event = eventPublisher.publishedEvents[0];
-    expect(event.event_type).toBe('UserAuthenticatedEvent');
+    expect(event.event_type).toBe(USER_AUTHENTICATED_EVENT_TYPE);
     expect(event.origin).toBe('users-service');
     expect(event.trace_id).toBeDefined();
     expect(event.payload).toMatchObject({

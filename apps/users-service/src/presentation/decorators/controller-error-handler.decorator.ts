@@ -19,14 +19,14 @@ export function ControllerErrorHandlerDecorator() {
       try {
         return await originalMethod.apply(this, args);
       } catch (error) {
-        if (
-          ['InvalidCredentialsError'].includes(error.name)
-        ) {
+        if (['InvalidCredentialsError'].includes(error.name)) {
           throw new UnauthorizedException(HttpUnauthorizedError(error));
         }
 
         if (
-          ['UserNotFoundError', 'RefreshTokenNotFoundError'].includes(error.name)
+          ['UserNotFoundError', 'RefreshTokenNotFoundError'].includes(
+            error.name,
+          )
         ) {
           throw new NotFoundException(HttpNotFoundError(error));
         }

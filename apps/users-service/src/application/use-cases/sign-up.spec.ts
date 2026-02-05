@@ -1,8 +1,7 @@
-import {
-  HashGeneratorSpy,
-} from '@/application/repositories/cryptography';
+import { HashGeneratorSpy } from '@/application/repositories/cryptography';
 import { InMemoryUsersRepository } from '@/application/repositories/database';
 import { InMemoryEventPublisher } from '@/infra/messaging';
+import { CREATED_USER_EVENT_TYPE } from '@payflow/contracts';
 
 import { UsersRepository } from '@/domain/repositories';
 
@@ -31,13 +30,15 @@ describe('sign up use case', () => {
       password: 'JohnDoe#123',
     });
 
-    expect(response).toEqual(expect.objectContaining({
-      user_id: expect.any(String),
-      name: 'John Doe',
-      email: 'mail@example.com',
-      password: expect.any(String),
-      created_at: expect.any(Date),
-    }));
+    expect(response).toEqual(
+      expect.objectContaining({
+        user_id: expect.any(String),
+        name: 'John Doe',
+        email: 'mail@example.com',
+        password: expect.any(String),
+        created_at: expect.any(Date),
+      }),
+    );
   });
 
   it('should be able to call findByEmail with correct values', async () => {
@@ -67,7 +68,7 @@ describe('sign up use case', () => {
     jest.spyOn(usersRepository, 'find_by_email').mockResolvedValueOnce(user);
 
     await expect(() =>
-      sut.execute({ 
+      sut.execute({
         name: 'John Doe',
         email: 'mail@example.com',
         password: 'JohnDoe#123',
@@ -112,7 +113,7 @@ describe('sign up use case', () => {
 
     expect(eventPublisher.publishedEvents).toHaveLength(1);
     const event = eventPublisher.publishedEvents[0];
-    expect(event.event_type).toBe('UserRegisteredEvent');
+    expect(event.event_type).toBe(CREATED_USER_EVENT_TYPE);
     expect(event.origin).toBe('users-service');
     expect(event.trace_id).toBeDefined();
     expect(event.payload).toMatchObject({

@@ -1,12 +1,9 @@
-import {
-  Encrypter,
-  UsersRepository
-} from '@/domain/repositories';
+import { Encrypter, UsersRepository } from '@/domain/repositories';
 
 import { InMemoryUsersRepository } from '@/application/repositories/database';
-import { 
-  HashComparerSpy, 
-  EncrypterSpy 
+import {
+  HashComparerSpy,
+  EncrypterSpy,
 } from '@/application/repositories/cryptography';
 
 import { SignInUseCase } from './sign-in';
@@ -34,16 +31,13 @@ describe('refresh token use case', () => {
       refresh_token: 'refresh-token',
     });
 
-    sut = new RefreshTokenUseCase(
-      usersRepository,
-      encrypter,
-    );
+    sut = new RefreshTokenUseCase(usersRepository, encrypter);
   });
 
   it('should be able to refresh a token', async () => {
     jest
       .spyOn(encrypter, 'encrypt')
-      .mockImplementationOnce(async () => 'access-token')
+      .mockImplementationOnce(async () => 'access-token');
 
     const response = await sut.execute({
       refresh_token: 'refresh-token',
@@ -54,7 +48,10 @@ describe('refresh token use case', () => {
   });
 
   it('should be able to call findByRefreshToken with correct values', async () => {
-    const usersRepositorySpy = jest.spyOn(usersRepository, 'find_by_refresh_token');
+    const usersRepositorySpy = jest.spyOn(
+      usersRepository,
+      'find_by_refresh_token',
+    );
 
     await sut.execute({
       refresh_token: 'refresh-token',
@@ -66,7 +63,9 @@ describe('refresh token use case', () => {
   });
 
   it('should be able to throw if findByRefreshToken returns null', async () => {
-    jest.spyOn(usersRepository, 'find_by_refresh_token').mockResolvedValueOnce(null);
+    jest
+      .spyOn(usersRepository, 'find_by_refresh_token')
+      .mockResolvedValueOnce(null);
 
     await expect(() =>
       sut.execute({ refresh_token: 'refresh-token' }),

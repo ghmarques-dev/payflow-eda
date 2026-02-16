@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 
-import type { 
-  SaleItemsRepository, 
-  SalesRepository 
+import {
+  SaleItemsRepository,
+  SalesRepository,
 } from '@/domain/repositories/database';
-import type { SaleItem } from '@/domain/entities';
+import { SaleItem } from '@/domain/entities';
 import { SaleNotFoundError } from '../errors';
 import { SaleNotInDraftStatusError } from '../errors/errors';
 
@@ -12,7 +12,7 @@ export type IAddItemToSaleUseCaseInput = {
   sale_id: string;
   product_id: string;
   quantity: number;
-  unitPriceInCents: number;
+  unit_price_in_cents: number;
 };
 
 export type IAddItemToSaleUseCaseOutput = SaleItem;
@@ -43,17 +43,17 @@ export class AddItemToSaleUseCase {
       sale_id: input.sale_id,
       product_id: input.product_id,
       quantity: input.quantity,
-      unitPriceInCents: input.unitPriceInCents,
+      unit_price_in_cents: input.unit_price_in_cents,
     });
 
     const newSubtotalInCents = 
-      (saleExists.subtotalInCents ?? 0) + (input.unitPriceInCents * input.quantity);
+      (saleExists.subtotal_in_cents ?? 0) + (input.unit_price_in_cents * input.quantity);
 
     await this.salesRepository.update({
       sale_id: input.sale_id,
       data: {
-        subtotalInCents: newSubtotalInCents,
-        totalInCents: newSubtotalInCents,
+        subtotal_in_cents: newSubtotalInCents,
+        total_in_cents: newSubtotalInCents,
       },
     });
 

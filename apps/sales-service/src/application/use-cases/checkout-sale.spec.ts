@@ -38,14 +38,14 @@ describe('checkout sale use case', () => {
       sale_id: sale.sale_id,
       product_id: 'product-123',
       quantity: 2,
-      unitPriceInCents: 1000,
+      unit_price_in_cents: 1000,
     });
 
     await salesRepository.update({
       sale_id: sale.sale_id,
       data: {
-        subtotalInCents: 2000,
-        totalInCents: 2000,
+        subtotal_in_cents: 2000,
+        total_in_cents: 2000,
       },
     });
 
@@ -71,15 +71,15 @@ describe('checkout sale use case', () => {
       sale_id: sale.sale_id,
       product_id: 'product-123',
       quantity: 2,
-      unitPriceInCents: 1000,
+      unit_price_in_cents: 1000,
     });
 
     await salesRepository.update({
       sale_id: sale.sale_id,
       data: {
-        subtotalInCents: 2000,
-        discountInCents: 200,
-        totalInCents: 1800,
+        subtotal_in_cents: 2000,
+        discount_in_cents: 200,
+        total_in_cents: 1800,
       },
     });
 
@@ -98,7 +98,7 @@ describe('checkout sale use case', () => {
           sale_item_id: saleItem.sale_item_id,
           product_id: 'product-123',
           quantity: 2,
-          unitPriceInCents: 1000,
+          unit_price_in_cents: 1000,
         },
       ],
       occurred_at: expect.any(Date),
@@ -144,8 +144,8 @@ describe('checkout sale use case', () => {
     await salesRepository.update({
       sale_id: sale.sale_id,
       data: {
-        subtotalInCents: 0,
-        totalInCents: 0,
+        subtotal_in_cents: 0,
+        total_in_cents: 0,
       },
     });
 
@@ -167,15 +167,15 @@ describe('checkout sale use case', () => {
       sale_id: sale.sale_id,
       product_id: 'product-123',
       quantity: 1,
-      unitPriceInCents: 1000,
+      unit_price_in_cents: 1000,
     });
 
     await salesRepository.update({
       sale_id: sale.sale_id,
       data: {
-        subtotalInCents: 1000,
-        discountInCents: 1000,
-        totalInCents: 0,
+        subtotal_in_cents: 1000,
+        discount_in_cents: 1000,
+        total_in_cents: 0,
       },
     });
 
@@ -197,15 +197,15 @@ describe('checkout sale use case', () => {
       sale_id: sale.sale_id,
       product_id: 'product-123',
       quantity: 1,
-      unitPriceInCents: 1000,
+      unit_price_in_cents: 1000,
     });
 
     await salesRepository.update({
       sale_id: sale.sale_id,
       data: {
-        subtotalInCents: 1000,
-        discountInCents: 1500,
-        totalInCents: -500,
+        subtotal_in_cents: 1000,
+        discount_in_cents: 1500,
+        total_in_cents: -500,
       },
     });
 
@@ -227,14 +227,14 @@ describe('checkout sale use case', () => {
       sale_id: sale.sale_id,
       product_id: 'product-123',
       quantity: 2,
-      unitPriceInCents: 1000,
+      unit_price_in_cents: 1000,
     });
 
     await salesRepository.update({
       sale_id: sale.sale_id,
       data: {
-        subtotalInCents: 2000,
-        totalInCents: 2000,
+        subtotal_in_cents: 2000,
+        total_in_cents: 2000,
       },
     });
 
@@ -263,15 +263,15 @@ describe('checkout sale use case', () => {
       sale_id: sale.sale_id,
       product_id: 'product-123',
       quantity: 2,
-      unitPriceInCents: 1000,
+      unit_price_in_cents: 1000,
     });
 
     await salesRepository.update({
       sale_id: sale.sale_id,
       data: {
-        subtotalInCents: 2000,
-        discountInCents: 200,
-        totalInCents: 1800,
+        subtotal_in_cents: 2000,
+        discount_in_cents: 200,
+        total_in_cents: 1800,
       },
     });
 
@@ -291,7 +291,7 @@ describe('checkout sale use case', () => {
     expect(publishedEvent.payload.items[0].product_id).toBe('product-123');
     expect(publishedEvent.payload.items[0].sale_item_id).toBe(saleItem.sale_item_id);
     expect(publishedEvent.payload.items[0].quantity).toBe(2);
-    expect(publishedEvent.payload.items[0].unitPriceInCents).toBe(1000);
+    expect(publishedEvent.payload.items[0].unit_price_in_cents).toBe(1000);
     expect(publishedEvent.payload.occurred_at).toBeInstanceOf(Date);
   });
 });

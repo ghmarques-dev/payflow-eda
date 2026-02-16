@@ -29,7 +29,7 @@ export namespace SaleItemsRepository {
       sale_id: string;
       product_id: string;
       quantity: number;
-      unitPriceInCents: number;
+      unit_price_in_cents: number;
     };
 
     export type Output = SaleItem;

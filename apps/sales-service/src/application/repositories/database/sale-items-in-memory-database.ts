@@ -14,7 +14,7 @@ export class InMemorySaleItemsRepository implements SaleItemsRepository {
       sale_id: input.sale_id,
       product_id: input.product_id,
       quantity: input.quantity,
-      unitPriceInCents: input.unitPriceInCents,
+      unit_price_in_cents: input.unit_price_in_cents,
       created_at: new Date(),
     };
 

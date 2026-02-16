@@ -26,21 +26,21 @@ describe('apply discount to sale use case', () => {
     await salesRepository.update({
       sale_id: sale.sale_id,
       data: {
-        subtotalInCents: 1000,
+        subtotal_in_cents: 1000,
       },
     });
 
     await sut.execute({
       sale_id: sale.sale_id,
-      discountInCents: 200,
+      discount_in_cents: 200,
     });
 
     const updatedSale = await salesRepository.findById({
       sale_id: sale.sale_id,
     });
 
-    expect(updatedSale?.discountInCents).toBe(200);
-    expect(updatedSale?.totalInCents).toBe(800);
+    expect(updatedSale?.discount_in_cents).toBe(200);
+    expect(updatedSale?.total_in_cents).toBe(800);
   });
 
   it('should be able to apply discount equal to subtotal', async () => {
@@ -53,21 +53,21 @@ describe('apply discount to sale use case', () => {
     await salesRepository.update({
       sale_id: sale.sale_id,
       data: {
-        subtotalInCents: 1000,
+        subtotal_in_cents: 1000,
       },
     });
 
     await sut.execute({
       sale_id: sale.sale_id,
-      discountInCents: 1000,
+      discount_in_cents: 1000,
     });
 
     const updatedSale = await salesRepository.findById({
       sale_id: sale.sale_id,
     });
 
-    expect(updatedSale?.discountInCents).toBe(1000);
-    expect(updatedSale?.totalInCents).toBe(0);
+    expect(updatedSale?.discount_in_cents).toBe(1000);
+    expect(updatedSale?.total_in_cents).toBe(0);
   });
 
   it('should be able to apply zero discount', async () => {
@@ -80,21 +80,21 @@ describe('apply discount to sale use case', () => {
     await salesRepository.update({
       sale_id: sale.sale_id,
       data: {
-        subtotalInCents: 1000,
+        subtotal_in_cents: 1000,
       },
     });
 
     await sut.execute({
       sale_id: sale.sale_id,
-      discountInCents: 0,
+      discount_in_cents: 0,
     });
 
     const updatedSale = await salesRepository.findById({
       sale_id: sale.sale_id,
     });
 
-    expect(updatedSale?.discountInCents).toBe(0);
-    expect(updatedSale?.totalInCents).toBe(1000);
+    expect(updatedSale?.discount_in_cents).toBe(0);
+    expect(updatedSale?.total_in_cents).toBe(1000);
   });
 
   it('should be able to update discount when applying new discount', async () => {
@@ -107,30 +107,30 @@ describe('apply discount to sale use case', () => {
     await salesRepository.update({
       sale_id: sale.sale_id,
       data: {
-        subtotalInCents: 1000,
-        discountInCents: 100,
-        totalInCents: 900,
+        subtotal_in_cents: 1000,
+        discount_in_cents: 100,
+        total_in_cents: 900,
       },
     });
 
     await sut.execute({
       sale_id: sale.sale_id,
-      discountInCents: 300,
+      discount_in_cents: 300,
     });
 
     const updatedSale = await salesRepository.findById({
       sale_id: sale.sale_id,
     });
 
-    expect(updatedSale?.discountInCents).toBe(300);
-    expect(updatedSale?.totalInCents).toBe(700);
+    expect(updatedSale?.discount_in_cents).toBe(300);
+    expect(updatedSale?.total_in_cents).toBe(700);
   });
 
   it('should not be able to apply discount to non-existent sale', async () => {
     await expect(
       sut.execute({
         sale_id: 'non-existent-sale-id',
-        discountInCents: 200,
+        discount_in_cents: 200,
       }),
     ).rejects.toThrow(SaleNotFoundError);
   });
@@ -146,14 +146,14 @@ describe('apply discount to sale use case', () => {
       sale_id: sale.sale_id,
       data: {
         status: 'COMPLETED',
-        subtotalInCents: 1000,
+        subtotal_in_cents: 1000,
       },
     });
 
     await expect(
       sut.execute({
         sale_id: sale.sale_id,
-        discountInCents: 200,
+        discount_in_cents: 200,
       }),
     ).rejects.toThrow(SaleNotInDraftStatusError);
   });
@@ -168,14 +168,14 @@ describe('apply discount to sale use case', () => {
     await salesRepository.update({
       sale_id: sale.sale_id,
       data: {
-        subtotalInCents: 1000,
+        subtotal_in_cents: 1000,
       },
     });
 
     await expect(
       sut.execute({
         sale_id: sale.sale_id,
-        discountInCents: -100,
+        discount_in_cents: -100,
       }),
     ).rejects.toThrow(InvalidDiscountError);
   });
@@ -190,14 +190,14 @@ describe('apply discount to sale use case', () => {
     await salesRepository.update({
       sale_id: sale.sale_id,
       data: {
-        subtotalInCents: 1000,
+        subtotal_in_cents: 1000,
       },
     });
 
     await expect(
       sut.execute({
         sale_id: sale.sale_id,
-        discountInCents: 1500,
+        discount_in_cents: 1500,
       }),
     ).rejects.toThrow(InvalidDiscountError);
   });
@@ -212,14 +212,14 @@ describe('apply discount to sale use case', () => {
     await salesRepository.update({
       sale_id: sale.sale_id,
       data: {
-        subtotalInCents: 0,
+        subtotal_in_cents: 0,
       },
     });
 
     await expect(
       sut.execute({
         sale_id: sale.sale_id,
-        discountInCents: 100,
+        discount_in_cents: 100,
       }),
     ).rejects.toThrow(InvalidDiscountError);
   });
@@ -234,7 +234,7 @@ describe('apply discount to sale use case', () => {
     await salesRepository.update({
       sale_id: sale.sale_id,
       data: {
-        subtotalInCents: 1000,
+        subtotal_in_cents: 1000,
       },
     });
 
@@ -242,14 +242,14 @@ describe('apply discount to sale use case', () => {
 
     await sut.execute({
       sale_id: sale.sale_id,
-      discountInCents: 200,
+      discount_in_cents: 200,
     });
 
     expect(salesRepositorySpy).toHaveBeenCalledWith({
       sale_id: sale.sale_id,
       data: {
-        discountInCents: 200,
-        totalInCents: 800,
+        discount_in_cents: 200,
+        total_in_cents: 800,
       },
     });
   });

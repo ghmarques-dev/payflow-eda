@@ -4,7 +4,7 @@ export interface SaleItem {
   product_id: string;
 
   quantity: number;
-  unitPriceInCents: number;
+  unit_price_in_cents: number;
 
   created_at: Date;
 }

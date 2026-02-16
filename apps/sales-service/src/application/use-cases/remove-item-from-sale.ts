@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
-import type { 
-  SaleItemsRepository, 
-  SalesRepository 
+import {
+  SaleItemsRepository,
+  SalesRepository,
 } from '@/domain/repositories/database';
 import { SaleNotFoundError } from '../errors';
 import { SaleNotInDraftStatusError, SaleItemNotFoundError } from '../errors/errors';
@@ -52,14 +52,14 @@ export class RemoveItemFromSaleUseCase {
       sale_item_id: input.sale_item_id,
     });
 
-    const itemValueInCents = saleItem.unitPriceInCents * saleItem.quantity;
+    const itemValueInCents = saleItem.unit_price_in_cents * saleItem.quantity;
     const newSubtotalInCents = 
-      (saleExists.subtotalInCents ?? 0) - itemValueInCents;
+      (saleExists.subtotal_in_cents ?? 0) - itemValueInCents;
 
     await this.salesRepository.update({
       sale_id: input.sale_id,
       data: {
-        subtotalInCents: Math.max(0, newSubtotalInCents),
+        subtotal_in_cents: Math.max(0, newSubtotalInCents),
       },
     });
   }

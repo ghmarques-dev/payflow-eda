@@ -8,9 +8,9 @@ export interface Sale {
 
   status: SaleStatus;
   items: SaleItem[];
-  subtotalInCents?: number;
-  discountInCents?: number;
-  totalInCents?: number;
+  subtotal_in_cents?: number;
+  discount_in_cents?: number;
+  total_in_cents?: number;
 
   created_at: Date;
   finished_at?: Date;

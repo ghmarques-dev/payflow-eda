@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import type { SalesRepository } from '@/domain/repositories/database';
+import { SalesRepository } from '@/domain/repositories/database';
 import type { Sale } from '@/domain/entities';
 
 export type IStartSaleUseCaseInput = {

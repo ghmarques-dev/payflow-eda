@@ -30,7 +30,7 @@ describe('add item to sale use case', () => {
       sale_id: sale.sale_id,
       product_id: 'product-123',
       quantity: 2,
-      unitPriceInCents: 1000,
+      unit_price_in_cents: 1000,
     });
 
     expect(response).toEqual(
@@ -39,7 +39,7 @@ describe('add item to sale use case', () => {
         sale_id: sale.sale_id,
         product_id: 'product-123',
         quantity: 2,
-        unitPriceInCents: 1000,
+        unit_price_in_cents: 1000,
         created_at: expect.any(Date),
       }),
     );
@@ -56,14 +56,14 @@ describe('add item to sale use case', () => {
       sale_id: sale.sale_id,
       product_id: 'product-123',
       quantity: 2,
-      unitPriceInCents: 1000,
+      unit_price_in_cents: 1000,
     });
 
     const updatedSale = await salesRepository.findById({
       sale_id: sale.sale_id,
     });
 
-    expect(updatedSale?.subtotalInCents).toBe(2000);
+    expect(updatedSale?.subtotal_in_cents).toBe(2000);
   });
 
   it('should be able to accumulate subtotal when adding multiple items', async () => {
@@ -77,21 +77,21 @@ describe('add item to sale use case', () => {
       sale_id: sale.sale_id,
       product_id: 'product-123',
       quantity: 2,
-      unitPriceInCents: 1000,
+      unit_price_in_cents: 1000,
     });
 
     await sut.execute({
       sale_id: sale.sale_id,
       product_id: 'product-456',
       quantity: 3,
-      unitPriceInCents: 500,
+      unit_price_in_cents: 500,
     });
 
     const updatedSale = await salesRepository.findById({
       sale_id: sale.sale_id,
     });
 
-    expect(updatedSale?.subtotalInCents).toBe(3500);
+    expect(updatedSale?.subtotal_in_cents).toBe(3500);
   });
 
   it('should not be able to add item to non-existent sale', async () => {
@@ -100,7 +100,7 @@ describe('add item to sale use case', () => {
         sale_id: 'non-existent-sale-id',
         product_id: 'product-123',
         quantity: 2,
-        unitPriceInCents: 1000,
+        unit_price_in_cents: 1000,
       }),
     ).rejects.toThrow(SaleNotFoundError);
   });
@@ -124,7 +124,7 @@ describe('add item to sale use case', () => {
         sale_id: sale.sale_id,
         product_id: 'product-123',
         quantity: 2,
-        unitPriceInCents: 1000,
+        unit_price_in_cents: 1000,
       }),
     ).rejects.toThrow(SaleNotInDraftStatusError);
   });
@@ -142,14 +142,14 @@ describe('add item to sale use case', () => {
       sale_id: sale.sale_id,
       product_id: 'product-123',
       quantity: 2,
-      unitPriceInCents: 1000,
+      unit_price_in_cents: 1000,
     });
 
     expect(saleItemsRepositorySpy).toHaveBeenCalledWith({
       sale_id: sale.sale_id,
       product_id: 'product-123',
       quantity: 2,
-      unitPriceInCents: 1000,
+      unit_price_in_cents: 1000,
     });
   });
 
@@ -166,14 +166,14 @@ describe('add item to sale use case', () => {
       sale_id: sale.sale_id,
       product_id: 'product-123',
       quantity: 2,
-      unitPriceInCents: 1000,
+      unit_price_in_cents: 1000,
     });
 
     expect(salesRepositorySpy).toHaveBeenCalledWith({
       sale_id: sale.sale_id,
       data: {
-        subtotalInCents: 2000,
-        totalInCents: 2000,
+        subtotal_in_cents: 2000,
+        total_in_cents: 2000,
       },
     });
   });

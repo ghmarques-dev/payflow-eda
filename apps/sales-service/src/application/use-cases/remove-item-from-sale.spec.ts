@@ -30,13 +30,13 @@ describe('remove item from sale use case', () => {
       sale_id: sale.sale_id,
       product_id: 'product-123',
       quantity: 2,
-      unitPriceInCents: 1000,
+      unit_price_in_cents: 1000,
     });
 
     await salesRepository.update({
       sale_id: sale.sale_id,
       data: {
-        subtotalInCents: 2000,
+        subtotal_in_cents: 2000,
       },
     });
 
@@ -63,13 +63,13 @@ describe('remove item from sale use case', () => {
       sale_id: sale.sale_id,
       product_id: 'product-123',
       quantity: 2,
-      unitPriceInCents: 1000,
+      unit_price_in_cents: 1000,
     });
 
     await salesRepository.update({
       sale_id: sale.sale_id,
       data: {
-        subtotalInCents: 2000,
+        subtotal_in_cents: 2000,
       },
     });
 
@@ -82,7 +82,7 @@ describe('remove item from sale use case', () => {
       sale_id: sale.sale_id,
     });
 
-    expect(updatedSale?.subtotalInCents).toBe(0);
+    expect(updatedSale?.subtotal_in_cents).toBe(0);
   });
 
   it('should be able to update subtotal correctly when removing one of multiple items', async () => {
@@ -96,20 +96,20 @@ describe('remove item from sale use case', () => {
       sale_id: sale.sale_id,
       product_id: 'product-123',
       quantity: 2,
-      unitPriceInCents: 1000,
+      unit_price_in_cents: 1000,
     });
 
     const saleItem2 = await saleItemsRepository.create({
       sale_id: sale.sale_id,
       product_id: 'product-456',
       quantity: 3,
-      unitPriceInCents: 500,
+      unit_price_in_cents: 500,
     });
 
     await salesRepository.update({
       sale_id: sale.sale_id,
       data: {
-        subtotalInCents: 3500,
+        subtotal_in_cents: 3500,
       },
     });
 
@@ -122,7 +122,7 @@ describe('remove item from sale use case', () => {
       sale_id: sale.sale_id,
     });
 
-    expect(updatedSale?.subtotalInCents).toBe(1500);
+    expect(updatedSale?.subtotal_in_cents).toBe(1500);
   });
 
   it('should not be able to remove item from non-existent sale', async () => {
@@ -130,7 +130,7 @@ describe('remove item from sale use case', () => {
       sale_id: 'sale-123',
       product_id: 'product-123',
       quantity: 2,
-      unitPriceInCents: 1000,
+      unit_price_in_cents: 1000,
     });
 
     await expect(
@@ -152,7 +152,7 @@ describe('remove item from sale use case', () => {
       sale_id: sale.sale_id,
       product_id: 'product-123',
       quantity: 2,
-      unitPriceInCents: 1000,
+      unit_price_in_cents: 1000,
     });
 
     await salesRepository.update({
@@ -202,7 +202,7 @@ describe('remove item from sale use case', () => {
       sale_id: sale1.sale_id,
       product_id: 'product-123',
       quantity: 2,
-      unitPriceInCents: 1000,
+      unit_price_in_cents: 1000,
     });
 
     await expect(
@@ -224,13 +224,13 @@ describe('remove item from sale use case', () => {
       sale_id: sale.sale_id,
       product_id: 'product-123',
       quantity: 2,
-      unitPriceInCents: 1000,
+      unit_price_in_cents: 1000,
     });
 
     await salesRepository.update({
       sale_id: sale.sale_id,
       data: {
-        subtotalInCents: 2000,
+        subtotal_in_cents: 2000,
       },
     });
 
@@ -257,13 +257,13 @@ describe('remove item from sale use case', () => {
       sale_id: sale.sale_id,
       product_id: 'product-123',
       quantity: 2,
-      unitPriceInCents: 1000,
+      unit_price_in_cents: 1000,
     });
 
     await salesRepository.update({
       sale_id: sale.sale_id,
       data: {
-        subtotalInCents: 2000,
+        subtotal_in_cents: 2000,
       },
     });
 
@@ -277,7 +277,7 @@ describe('remove item from sale use case', () => {
     expect(salesRepositorySpy).toHaveBeenCalledWith({
       sale_id: sale.sale_id,
       data: {
-        subtotalInCents: 0,
+        subtotal_in_cents: 0,
       },
     });
   });

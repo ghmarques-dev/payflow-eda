@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
-import type { 
-  SaleItemsRepository, 
-  SalesRepository 
+import {
+  SaleItemsRepository,
+  SalesRepository,
 } from '@/domain/repositories/database';
 import { SaleNotFoundError } from '../errors';
 import { 
@@ -50,7 +50,7 @@ export class CheckoutSaleUseCase {
       throw new SaleWithoutItemsError();
     }
 
-    const totalInCents = saleExists.totalInCents ?? 0;
+    const totalInCents = saleExists.total_in_cents ?? 0;
 
     if (totalInCents <= 0) {
       throw new SaleWithInvalidTotalError();
@@ -69,7 +69,7 @@ export class CheckoutSaleUseCase {
         sale_item_id: item.sale_item_id,
         product_id: item.product_id,
         quantity: item.quantity,
-        unitPriceInCents: item.unitPriceInCents,
+        unit_price_in_cents: item.unit_price_in_cents,
       })),
       occurred_at: new Date(),
     } as any);

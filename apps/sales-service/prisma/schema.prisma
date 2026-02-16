@@ -1,0 +1,45 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "./generated"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum SaleStatus {
+  DRAFT
+  CHECKOUT_PENDING
+  COMPLETED
+  CANCELLED
+}
+
+model Sale {
+  sale_id     String @id @default(uuid())
+  operator_id String
+  store_id    String
+
+  status SaleStatus @default(DRAFT)
+  items  SaleItem[]
+
+  subtotal_in_cents Int
+  discount_in_cents Int
+  total_in_cents    Int
+
+  created_at  DateTime  @default(now())
+  finished_at DateTime?
+}
+
+model SaleItem {
+  sale_item_id String @id @default(uuid())
+  product_id   String
+
+  quantity            Int
+  unit_price_in_cents Int
+
+  sale_id String
+  sale    Sale?  @relation(fields: [sale_id], references: [sale_id])
+
+  created_at DateTime @default(now())
+}

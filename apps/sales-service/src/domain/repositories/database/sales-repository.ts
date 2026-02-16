@@ -29,7 +29,7 @@ export namespace SalesRepository {
   export namespace Update {
     export type Input = {
       sale_id: string;
-      data: Partial<Sale>;
+      data: Partial<Omit<Sale, 'sale_id' | 'created_at'>>;
     };
 
     export type Output = Sale;

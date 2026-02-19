@@ -1,0 +1,37 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "./generated"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model ProductStock {
+  product_stock_id String @id @default(uuid())
+
+  available_quantity Int @default(0)
+  reserved_quantity  Int @default(0)
+
+  product_id String  @unique
+  product    Product @relation(fields: [product_id], references: [product_id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Product {
+  product_id     String  @id @default(uuid())
+  store_id       String
+  name           String
+  description    String
+  price_in_cents Int
+  is_active      Boolean @default(true)
+  sku            String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  product_stocks ProductStock[]
+}

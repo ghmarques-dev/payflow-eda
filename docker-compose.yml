@@ -20,6 +20,17 @@ services:
       POSTGRES_DB: sales-service
     volumes:
       - sales-service-db-data:/var/lib/postgresql/data
+
+  inventory-service-db:
+    image: postgres:18-alpine
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: inventory-service
+    volumes:
+      - inventory-service-db-data:/var/lib/postgresql/data
   broker:
     image: rabbitmq:management-alpine
     ports:
@@ -31,4 +42,5 @@ services:
 volumes:
   users-service-db-data:
   sales-service-db-data:
+  inventory-service-db-data:
   broker-data:

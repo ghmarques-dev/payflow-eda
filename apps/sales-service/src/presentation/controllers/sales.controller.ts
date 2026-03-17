@@ -33,12 +33,6 @@ const addItemToSaleBodySchema = z.object({
 
 type AddItemToSaleBodySchema = z.infer<typeof addItemToSaleBodySchema>;
 
-const removeItemFromSaleSchema = z.object({
-  sale_id: z.string(),
-});
-
-type RemoveItemFromSaleSchema = z.infer<typeof removeItemFromSaleSchema>;
-
 const applyDiscountToSaleSchema = z.object({
   discount_in_cents: z.number().nonnegative(),
 });

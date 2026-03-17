@@ -5,4 +5,4 @@ export interface CreatedUserEventPayload {
   occurred_at: Date;
 }
 
-export const CREATED_USER_EVENT_TYPE = 'user.created' as const;
+export const CREATED_USER_EVENT_TYPE = 'user.created';

@@ -6,7 +6,7 @@ import type { DomainEvent } from '@payflow/contracts';
 import { EnvService } from '@/infra/env';
 
 const EXCHANGE_NAME = 'payflow.events';
-const MESSAGES_QUEUE_NAME = 'payflow.events.queue';
+const MESSAGES_QUEUE_NAME = 'payflow.events.sales';
 const EXCHANGE_TYPE = 'topic';
 
 function serializeEvent<T>(event: DomainEvent<T>): Record<string, unknown> {
@@ -37,17 +37,17 @@ export class RabbitMqEventPublisher implements EventPublisher, OnModuleDestroy {
     await this.close();
   }
 
-  async publish<T>(event: DomainEvent<T>): Promise<void> {
+  async publish<T>({ event, routing_key }: EventPublisher.Publish.Input<T>): Promise<void> {
     const channel = await this.getChannel();
 
     const serialized = serializeEvent(event);
 
-    const routingKey = event.event_type;
+    const routingKey = routing_key;
     const messageBuffer = Buffer.from(JSON.stringify(serialized), 'utf-8');
 
     const publishOptions = {
       persistent: true,
-      contentType: 'application/json' as const,
+      contentType: 'application/json',
       messageId: event.trace_id,
       timestamp: Date.now(),
       headers: {

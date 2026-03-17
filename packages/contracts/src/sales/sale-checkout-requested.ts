@@ -4,4 +4,4 @@ export interface SaleCheckoutRequestedEventPayload {
   occurred_at: Date;
 }
 
-export const SALE_CHECKOUT_REQUESTED_EVENT_TYPE = 'sale.checkout_requested' as const;
+export const SALE_CHECKOUT_REQUESTED_EVENT_TYPE = 'sale.checkout_requested';

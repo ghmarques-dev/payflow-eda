@@ -9,7 +9,8 @@ services:
       POSTGRES_DB: users-service
     volumes:
       - users-service-db-data:/var/lib/postgresql/data
-
+    networks:
+      - payflow-network
   sales-service-db:
     image: postgres:18-alpine
     ports:
@@ -20,7 +21,8 @@ services:
       POSTGRES_DB: sales-service
     volumes:
       - sales-service-db-data:/var/lib/postgresql/data
-
+    networks:
+      - payflow-network
   inventory-service-db:
     image: postgres:18-alpine
     ports:
@@ -31,6 +33,8 @@ services:
       POSTGRES_DB: inventory-service
     volumes:
       - inventory-service-db-data:/var/lib/postgresql/data
+    networks:
+      - payflow-network
   broker:
     image: rabbitmq:management-alpine
     ports:
@@ -38,9 +42,15 @@ services:
       - "15672:15672"
     volumes:
     - broker-data:/var/lib/rabbitmq
+    networks:
+      - payflow-network
 
 volumes:
   users-service-db-data:
   sales-service-db-data:
   inventory-service-db-data:
   broker-data:
+
+networks:
+  payflow-network:
+    driver: bridge

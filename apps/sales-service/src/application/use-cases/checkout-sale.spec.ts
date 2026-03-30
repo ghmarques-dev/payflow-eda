@@ -285,13 +285,14 @@ describe('checkout sale use case', () => {
 
     const publishedEvent = eventPublisherSpy.mock.calls[0][0] as any;
 
-    expect(publishedEvent.event_type).toBe('sale.checkout_requested');
-    expect(publishedEvent.payload.sale_id).toBe(sale.sale_id);
-    expect(publishedEvent.payload.items).toHaveLength(1);
-    expect(publishedEvent.payload.items[0].product_id).toBe('product-123');
-    expect(publishedEvent.payload.items[0].sale_item_id).toBe(saleItem.sale_item_id);
-    expect(publishedEvent.payload.items[0].quantity).toBe(2);
-    expect(publishedEvent.payload.items[0].unit_price_in_cents).toBe(1000);
-    expect(publishedEvent.payload.occurred_at).toBeInstanceOf(Date);
+    expect(publishedEvent.routing_key).toBe('sale.checkout_requested');
+    expect(publishedEvent.event.event_type).toBe('sale.checkout_requested');
+    expect(publishedEvent.event.payload.sale_id).toBe(sale.sale_id);
+    expect(publishedEvent.event.payload.items).toHaveLength(1);
+    expect(publishedEvent.event.payload.items[0].product_id).toBe('product-123');
+    expect(publishedEvent.event.payload.items[0].sale_item_id).toBe(saleItem.sale_item_id);
+    expect(publishedEvent.event.payload.items[0].quantity).toBe(2);
+    expect(publishedEvent.event.payload.items[0].unit_price_in_cents).toBe(1000);
+    expect(publishedEvent.event.payload.occurred_at).toBeInstanceOf(Date);
   });
 });

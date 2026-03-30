@@ -74,6 +74,9 @@ export class CheckoutSaleUseCase {
       occurred_at: new Date(),
     } as any);
 
-    await this.eventPublisher.publish(event);
+    await this.eventPublisher.publish({
+      event,
+      routing_key: 'sale.checkout_requested',
+    });
   }
 }

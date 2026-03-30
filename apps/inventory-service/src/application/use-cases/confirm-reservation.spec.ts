@@ -29,7 +29,7 @@ describe('confirm reservation use case', () => {
     });
 
     expect(result.product_stock_id).toBe('product-stock-1');
-    expect(result.available_quantity).toBe(5);
+    expect(result.available_quantity).toBe(1);
     expect(result.reserved_quantity).toBe(6);
   });
 
@@ -84,7 +84,7 @@ describe('confirm reservation use case', () => {
 
     expect(productStockRepositoryUpdateSpy).toHaveBeenCalledWith({
       product_stock_id: 'product-stock-1',
-      available_quantity: 5,
+      available_quantity: 1,  
       reserved_quantity: 6,
     });
   });

@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ControllersModule } from '@/presentation/controllers';
 
 import { EnvModule, envSchema } from '@/infra/env';
+import { SubscriberModule } from '@/infra/subscriber';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { EnvModule, envSchema } from '@/infra/env';
     }),
     EnvModule,
     ControllersModule,
+    SubscriberModule,
   ],
   controllers: [],
   providers: [],

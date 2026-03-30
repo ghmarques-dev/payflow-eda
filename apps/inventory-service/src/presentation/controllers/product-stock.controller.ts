@@ -24,7 +24,6 @@ import {
 import { ProductStockPresenter } from '../presenters';
 
 const createStockForProductSchema = z.object({
-  product_id: z.string(),
   available_quantity: z.coerce.number().nonnegative(),
   reserved_quantity: z.coerce.number().nonnegative().optional(),
 });
@@ -59,14 +58,15 @@ export class ProductStockController {
     private readonly getProductStockByProductIdUseCase: GetProductStockByProductIdUseCase,
   ) {}
 
-  @Post()
+  @Post(":product_id")
   @ControllerErrorHandlerDecorator()
   async createStockForProduct(
     @Body(new ZodValidationPipe(createStockForProductSchema))
       body: CreateStockForProductSchema,
+    @Param('product_id') product_id: string,
   ) {
     const response = await this.createStockForProductUseCase.execute({
-      product_id: body.product_id,
+      product_id: product_id,
       available_quantity: body.available_quantity,
       reserved_quantity: body.reserved_quantity ?? 0,
     });

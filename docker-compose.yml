@@ -45,6 +45,16 @@ services:
     networks:
       - payflow-network
 
+  jaeger:
+    image: jaegertracing/all-in-one:1.57
+    ports:
+      - "16686:16686" # UI
+      - "6831:6831/udp" # Traces UDP
+      - "14268:14268" # Traces HTTP
+      - "4318:4318" # OTLP/HTTP
+    networks:
+      - payflow-network
+
 volumes:
   users-service-db-data:
   sales-service-db-data:

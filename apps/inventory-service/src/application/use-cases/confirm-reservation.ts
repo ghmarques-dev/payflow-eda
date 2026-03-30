@@ -44,10 +44,11 @@ export class ConfirmReservationUseCase {
     }
 
     const newReserved = stock.reserved_quantity - input.quantity;
+    const newAvailable = stock.available_quantity - input.quantity;
 
     return this.productStockRepository.update({
       product_stock_id: stock.product_stock_id,
-      available_quantity: stock.available_quantity,
+      available_quantity: newAvailable,
       reserved_quantity: newReserved,
     });
   }

@@ -3,11 +3,16 @@ import amqp, { Channel, ChannelModel } from 'amqplib';
 
 import type { EventPublisher } from '@/application/ports';
 import type { DomainEvent } from '@payflow/contracts';
+import {
+  RABBITMQ_DLQ_QUEUE,
+  RABBITMQ_DLX_EXCHANGE,
+  RABBITMQ_DLX_ROUTING_KEY,
+  RABBITMQ_EXCHANGE_NAME,
+  RABBITMQ_EXCHANGE_TYPE,
+  RABBITMQ_MAIN_QUEUE,
+} from '@payflow/contracts';
 import { EnvService } from '@/infra/env';
-
-const EXCHANGE_NAME = 'payflow.events';
-const MESSAGES_QUEUE_NAME = 'payflow.events.sales';
-const EXCHANGE_TYPE = 'topic';
+import { injectTraceContext, SpanStatusCode, trace } from '@payflow/telemetry';
 
 function serializeEvent<T>(event: DomainEvent<T>): Record<string, unknown> {
   const hasToObject =
@@ -45,18 +50,44 @@ export class RabbitMqEventPublisher implements EventPublisher, OnModuleDestroy {
     const routingKey = routing_key;
     const messageBuffer = Buffer.from(JSON.stringify(serialized), 'utf-8');
 
-    const publishOptions = {
-      persistent: true,
-      contentType: 'application/json',
-      messageId: event.trace_id,
-      timestamp: Date.now(),
-      headers: {
-        origin: event.origin,
-        event_type: event.event_type,
-      },
-    };
+    const tracer = trace.getTracer('payflow.sales.messaging');
+    const headers = injectTraceContext({
+      origin: event.origin,
+      event_type: event.event_type,
+    });
 
-    channel.publish(EXCHANGE_NAME, routingKey, messageBuffer, publishOptions);
+    await tracer.startActiveSpan(
+      'test-span',
+      async (span) => {
+        span.setAttribute('test.attribute', 'test-value');
+        span.setStatus({ code: SpanStatusCode.OK });
+        span.end();
+      },
+    );
+
+    await tracer.startActiveSpan(
+      'rabbitmq.publish',
+      {
+        attributes: {
+          'messaging.system': 'rabbitmq',
+          'messaging.destination.name': routingKey,
+          'messaging.message_id': event.trace_id,
+        },
+      },
+      async (span) => {
+        const publishOptions = {
+          persistent: true,
+          contentType: 'application/json',
+          messageId: event.trace_id,
+          timestamp: Date.now(),
+          headers,
+        };
+
+        channel.publish(RABBITMQ_EXCHANGE_NAME, routingKey, messageBuffer, publishOptions);
+        span.setStatus({ code: SpanStatusCode.OK });
+        span.end();
+      },
+    );
   }
 
   private async getChannel(): Promise<Channel> {
@@ -73,12 +104,23 @@ export class RabbitMqEventPublisher implements EventPublisher, OnModuleDestroy {
 
     this.channel = channel;
 
-    await channel.assertExchange(EXCHANGE_NAME, EXCHANGE_TYPE, {
+    await channel.assertExchange(RABBITMQ_EXCHANGE_NAME, RABBITMQ_EXCHANGE_TYPE, {
       durable: true,
     });
 
-    await channel.assertQueue(MESSAGES_QUEUE_NAME, { durable: true });
-    await channel.bindQueue(MESSAGES_QUEUE_NAME, EXCHANGE_NAME, '#');
+    await channel.assertExchange(RABBITMQ_DLX_EXCHANGE, 'direct', { durable: true });
+
+    await channel.assertQueue(RABBITMQ_MAIN_QUEUE, {
+      durable: true,
+      arguments: {
+        'x-dead-letter-exchange': RABBITMQ_DLX_EXCHANGE,
+        'x-dead-letter-routing-key': RABBITMQ_DLX_ROUTING_KEY,
+      },
+    });
+    await channel.bindQueue(RABBITMQ_MAIN_QUEUE, RABBITMQ_EXCHANGE_NAME, '#');
+
+    await channel.assertQueue(RABBITMQ_DLQ_QUEUE, { durable: true });
+    await channel.bindQueue(RABBITMQ_DLQ_QUEUE, RABBITMQ_DLX_EXCHANGE, RABBITMQ_DLX_ROUTING_KEY);
 
     return channel;
   }

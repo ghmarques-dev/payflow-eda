@@ -20,7 +20,9 @@ function serializeEvent<T>(event: DomainEvent<T>): Record<string, unknown> {
     'function';
 
   if (hasToObject) {
-    return (event as unknown as { toObject: () => Record<string, unknown> }).toObject();
+    return (
+      event as unknown as { toObject: () => Record<string, unknown> }
+    ).toObject();
   }
 
   return {
@@ -42,7 +44,10 @@ export class RabbitMqEventPublisher implements EventPublisher, OnModuleDestroy {
     await this.close();
   }
 
-  async publish<T>({ event, routing_key }: EventPublisher.Publish.Input<T>): Promise<void> {
+  async publish<T>({
+    event,
+    routing_key,
+  }: EventPublisher.Publish.Input<T>): Promise<void> {
     const channel = await this.getChannel();
 
     const serialized = serializeEvent(event);
@@ -55,15 +60,6 @@ export class RabbitMqEventPublisher implements EventPublisher, OnModuleDestroy {
       origin: event.origin,
       event_type: event.event_type,
     });
-
-    await tracer.startActiveSpan(
-      'test-span',
-      async (span) => {
-        span.setAttribute('test.attribute', 'test-value');
-        span.setStatus({ code: SpanStatusCode.OK });
-        span.end();
-      },
-    );
 
     await tracer.startActiveSpan(
       'rabbitmq.publish',
@@ -83,7 +79,12 @@ export class RabbitMqEventPublisher implements EventPublisher, OnModuleDestroy {
           headers,
         };
 
-        channel.publish(RABBITMQ_EXCHANGE_NAME, routingKey, messageBuffer, publishOptions);
+        channel.publish(
+          RABBITMQ_EXCHANGE_NAME,
+          routingKey,
+          messageBuffer,
+          publishOptions,
+        );
         span.setStatus({ code: SpanStatusCode.OK });
         span.end();
       },
@@ -104,11 +105,17 @@ export class RabbitMqEventPublisher implements EventPublisher, OnModuleDestroy {
 
     this.channel = channel;
 
-    await channel.assertExchange(RABBITMQ_EXCHANGE_NAME, RABBITMQ_EXCHANGE_TYPE, {
+    await channel.assertExchange(
+      RABBITMQ_EXCHANGE_NAME,
+      RABBITMQ_EXCHANGE_TYPE,
+      {
+        durable: true,
+      },
+    );
+
+    await channel.assertExchange(RABBITMQ_DLX_EXCHANGE, 'direct', {
       durable: true,
     });
-
-    await channel.assertExchange(RABBITMQ_DLX_EXCHANGE, 'direct', { durable: true });
 
     await channel.assertQueue(RABBITMQ_MAIN_QUEUE, {
       durable: true,
@@ -120,7 +127,11 @@ export class RabbitMqEventPublisher implements EventPublisher, OnModuleDestroy {
     await channel.bindQueue(RABBITMQ_MAIN_QUEUE, RABBITMQ_EXCHANGE_NAME, '#');
 
     await channel.assertQueue(RABBITMQ_DLQ_QUEUE, { durable: true });
-    await channel.bindQueue(RABBITMQ_DLQ_QUEUE, RABBITMQ_DLX_EXCHANGE, RABBITMQ_DLX_ROUTING_KEY);
+    await channel.bindQueue(
+      RABBITMQ_DLQ_QUEUE,
+      RABBITMQ_DLX_EXCHANGE,
+      RABBITMQ_DLX_ROUTING_KEY,
+    );
 
     return channel;
   }

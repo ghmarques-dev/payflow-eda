@@ -21,10 +21,12 @@ export type IAddItemToSaleUseCaseOutput = SaleItem;
 export class AddItemToSaleUseCase {
   constructor(
     private readonly salesRepository: SalesRepository,
-    private readonly saleItemsRepository: SaleItemsRepository
+    private readonly saleItemsRepository: SaleItemsRepository,
   ) {}
 
-  async execute(input: IAddItemToSaleUseCaseInput): Promise<IAddItemToSaleUseCaseOutput> {
+  async execute(
+    input: IAddItemToSaleUseCaseInput,
+  ): Promise<IAddItemToSaleUseCaseOutput> {
     const saleExists = await this.salesRepository.findById({
       sale_id: input.sale_id,
     });
@@ -46,8 +48,9 @@ export class AddItemToSaleUseCase {
       unit_price_in_cents: input.unit_price_in_cents,
     });
 
-    const newSubtotalInCents = 
-      (saleExists.subtotal_in_cents ?? 0) + (input.unit_price_in_cents * input.quantity);
+    const newSubtotalInCents =
+      (saleExists.subtotal_in_cents ?? 0) +
+      input.unit_price_in_cents * input.quantity;
 
     await this.salesRepository.update({
       sale_id: input.sale_id,

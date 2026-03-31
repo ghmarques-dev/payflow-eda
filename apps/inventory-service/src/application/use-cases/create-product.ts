@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable } from "@nestjs/common";
 
-import { ProductRepository } from '@/domain/repositories/database';
-import { SkuGenerator } from '@/domain/services/sku-generator';
-import type { Product } from '@/domain/entities';
+import { ProductRepository } from "@/domain/repositories/database";
+import { SkuGenerator } from "@/domain/services/sku-generator";
+import type { Product } from "@/domain/entities";
 
 export type ICreateProductUseCaseInput = {
   store_id: string;

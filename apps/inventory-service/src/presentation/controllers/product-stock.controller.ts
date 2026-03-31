@@ -1,27 +1,20 @@
-import { z } from 'zod';
-import {
-  Body,
-  Controller,
-  Patch,
-  Post,
-  Get,
-  Param,
-} from '@nestjs/common';
+import { z } from "zod";
+import { Body, Controller, Patch, Post, Get, Param } from "@nestjs/common";
 
-import { ZodValidationPipe } from '@/infra/pipes';
+import { ZodValidationPipe } from "@/infra/pipes";
 import {
   HttpCreatedResponse,
   HttpSuccessResponse,
-} from '@/presentation/helpers';
-import { ControllerErrorHandlerDecorator } from '@/presentation/decorators';
+} from "@/presentation/helpers";
+import { ControllerErrorHandlerDecorator } from "@/presentation/decorators";
 import {
   CreateStockForProductUseCase,
   AddStockUseCase,
   ReserveStockUseCase,
   ConfirmReservationUseCase,
   GetProductStockByProductIdUseCase,
-} from '@/application/use-cases';
-import { ProductStockPresenter } from '../presenters';
+} from "@/application/use-cases";
+import { ProductStockPresenter } from "../presenters";
 
 const createStockForProductSchema = z.object({
   available_quantity: z.coerce.number().nonnegative(),
@@ -48,7 +41,7 @@ const confirmReservationSchema = z.object({
 
 type ConfirmReservationSchema = z.infer<typeof confirmReservationSchema>;
 
-@Controller('stocks')
+@Controller("stocks")
 export class ProductStockController {
   constructor(
     private readonly createStockForProductUseCase: CreateStockForProductUseCase,
@@ -62,8 +55,8 @@ export class ProductStockController {
   @ControllerErrorHandlerDecorator()
   async createStockForProduct(
     @Body(new ZodValidationPipe(createStockForProductSchema))
-      body: CreateStockForProductSchema,
-    @Param('product_id') product_id: string,
+    body: CreateStockForProductSchema,
+    @Param("product_id") product_id: string,
   ) {
     const response = await this.createStockForProductUseCase.execute({
       product_id: product_id,
@@ -73,19 +66,19 @@ export class ProductStockController {
     return HttpCreatedResponse(ProductStockPresenter.toHTTP(response));
   }
 
-  @Get('product/:product_id')
+  @Get("product/:product_id")
   @ControllerErrorHandlerDecorator()
-  async getStockByProductId(@Param('product_id') product_id: string) {
+  async getStockByProductId(@Param("product_id") product_id: string) {
     const response = await this.getProductStockByProductIdUseCase.execute({
       product_id,
     });
     return HttpSuccessResponse(ProductStockPresenter.toHTTP(response));
   }
 
-  @Patch('product/:product_id/add')
+  @Patch("product/:product_id/add")
   @ControllerErrorHandlerDecorator()
   async addStock(
-    @Param('product_id') product_id: string,
+    @Param("product_id") product_id: string,
     @Body(new ZodValidationPipe(quantitySchema)) body: QuantitySchema,
   ) {
     const response = await this.addStockUseCase.execute({
@@ -95,10 +88,10 @@ export class ProductStockController {
     return HttpSuccessResponse(ProductStockPresenter.toHTTP(response));
   }
 
-  @Post('product/:product_id/reserve')
+  @Post("product/:product_id/reserve")
   @ControllerErrorHandlerDecorator()
   async reserveStock(
-    @Param('product_id') product_id: string,
+    @Param("product_id") product_id: string,
     @Body(new ZodValidationPipe(reserveStockSchema)) body: ReserveStockSchema,
   ) {
     const response = await this.reserveStockUseCase.execute({
@@ -109,12 +102,12 @@ export class ProductStockController {
     return HttpSuccessResponse(ProductStockPresenter.toHTTP(response));
   }
 
-  @Post('product/:product_id/confirm-reservation')
+  @Post("product/:product_id/confirm-reservation")
   @ControllerErrorHandlerDecorator()
   async confirmReservation(
-    @Param('product_id') product_id: string,
+    @Param("product_id") product_id: string,
     @Body(new ZodValidationPipe(confirmReservationSchema))
-      body: ConfirmReservationSchema,
+    body: ConfirmReservationSchema,
   ) {
     const response = await this.confirmReservationUseCase.execute({
       product_id,

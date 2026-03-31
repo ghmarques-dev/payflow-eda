@@ -7,7 +7,7 @@ export abstract class EventPublisher {
 export namespace EventPublisher {
   export namespace Publish {
     export type Input<T> = {
-      event: DomainEvent<T>
+      event: DomainEvent<T>;
       routing_key: string;
     };
 

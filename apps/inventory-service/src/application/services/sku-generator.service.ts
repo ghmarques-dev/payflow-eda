@@ -1,8 +1,8 @@
-import { randomUUID } from 'node:crypto';
+import { randomUUID } from "node:crypto";
 
-import { Injectable } from '@nestjs/common';
+import { Injectable } from "@nestjs/common";
 
-import { SkuGenerator } from '@/domain/services/sku-generator';
+import { SkuGenerator } from "@/domain/services/sku-generator";
 
 const MAX_WORDS = 3;
 const WORD_ABBREV_LENGTH = 3;
@@ -19,19 +19,19 @@ export class SkuGeneratorService implements SkuGenerator {
   ): Promise<SkuGenerator.Generate.Output> {
     const parts = this.abbreviateName(input.name);
     const unique = randomUUID()
-      .replace(/-/g, '')
+      .replace(/-/g, "")
       .slice(0, UNIQUE_SUFFIX_LENGTH)
       .toUpperCase();
-    const namePart = parts.join('-');
+    const namePart = parts.join("-");
     return namePart.length > 0 ? `${namePart}-${unique}` : unique;
   }
 
   private abbreviateName(name: string): string[] {
     const normalized = name
-      .normalize('NFD')
-      .replace(/\p{Diacritic}/gu, '')
+      .normalize("NFD")
+      .replace(/\p{Diacritic}/gu, "")
       .toUpperCase()
-      .replace(/[^A-Z0-9\s]/g, ' ')
+      .replace(/[^A-Z0-9\s]/g, " ")
       .trim()
       .split(/\s+/)
       .filter(Boolean);

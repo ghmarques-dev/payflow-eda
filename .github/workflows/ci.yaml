@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Typecheck, build, test
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma Client (all services)
+        run: |
+          pnpm --filter sales-service exec prisma generate
+          pnpm --filter inventory-service exec prisma generate
+          pnpm --filter @payflow/users-service exec prisma generate
+
+      - name: Typecheck (turborepo)
+        run: pnpm run check-types
+
+      - name: Build (turborepo)
+        run: pnpm run build
+
+      - name: Unit tests
+        run: |
+          pnpm --filter sales-service run test
+          pnpm --filter inventory-service run test
+          pnpm --filter @payflow/users-service run test

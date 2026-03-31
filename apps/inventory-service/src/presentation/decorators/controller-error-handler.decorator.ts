@@ -3,13 +3,13 @@ import {
   HttpInternalServerError,
   HttpNotFoundError,
   HttpUnprocessableEntityError,
-} from '@/presentation/helpers';
+} from "@/presentation/helpers";
 import {
   ConflictException,
   InternalServerErrorException,
   NotFoundException,
   UnprocessableEntityException,
-} from '@nestjs/common';
+} from "@nestjs/common";
 
 export function ControllerErrorHandlerDecorator() {
   return (target: any, _: string, descriptor: PropertyDescriptor) => {
@@ -21,30 +21,37 @@ export function ControllerErrorHandlerDecorator() {
       } catch (error) {
         if (
           error instanceof Error &&
-          ['ProductStockNotFoundError', 'ProductNotFoundError'].includes(
+          ["ProductStockNotFoundError", "ProductNotFoundError"].includes(
             error.name,
           )
         ) {
           throw new NotFoundException(HttpNotFoundError(error));
         }
 
-        if (error instanceof Error && error.name === 'ProductStockAlreadyExistsError') {
+        if (
+          error instanceof Error &&
+          error.name === "ProductStockAlreadyExistsError"
+        ) {
           throw new ConflictException(HttpConflictError(error));
         }
 
         if (
           error instanceof Error &&
           [
-            'InvalidQuantityError',
-            'InsufficientAvailableQuantityError',
-            'InsufficientReservedQuantityError',
+            "InvalidQuantityError",
+            "InsufficientAvailableQuantityError",
+            "InsufficientReservedQuantityError",
           ].includes(error.name)
         ) {
-          throw new UnprocessableEntityException(HttpUnprocessableEntityError(error));
+          throw new UnprocessableEntityException(
+            HttpUnprocessableEntityError(error),
+          );
         }
 
         throw new InternalServerErrorException(
-          HttpInternalServerError(error instanceof Error ? error.message : String(error)),
+          HttpInternalServerError(
+            error instanceof Error ? error.message : String(error),
+          ),
         );
       }
     };

@@ -1,4 +1,4 @@
-import type { ProductStock } from '@/domain/entities';
+import type { ProductStock } from "@/domain/entities";
 
 export abstract class ProductStockRepository {
   abstract create(

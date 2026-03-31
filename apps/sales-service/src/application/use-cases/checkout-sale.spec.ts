@@ -1,14 +1,17 @@
-import { InMemorySalesRepository, InMemorySaleItemsRepository } from '../repositories/database';
+import {
+  InMemorySalesRepository,
+  InMemorySaleItemsRepository,
+} from '../repositories/database';
 
 import { SalesRepository } from '@/domain/repositories';
 import { SaleItemsRepository } from '@/domain/repositories/database';
 
 import { CheckoutSaleUseCase } from './checkout-sale';
 import { SaleNotFoundError } from '../errors';
-import { 
+import {
   SaleNotInDraftStatusError,
   SaleWithoutItemsError,
-  SaleWithInvalidTotalError
+  SaleWithInvalidTotalError,
 } from '../errors/errors';
 
 import { InMemoryEventPublisher } from '@/infra/messaging';
@@ -24,7 +27,11 @@ describe('checkout sale use case', () => {
     saleItemsRepository = new InMemorySaleItemsRepository();
     eventPublisher = new InMemoryEventPublisher();
 
-    sut = new CheckoutSaleUseCase(salesRepository, saleItemsRepository, eventPublisher);
+    sut = new CheckoutSaleUseCase(
+      salesRepository,
+      saleItemsRepository,
+      eventPublisher,
+    );
   });
 
   it('should be able to checkout sale', async () => {
@@ -289,10 +296,16 @@ describe('checkout sale use case', () => {
     expect(publishedEvent.event.event_type).toBe('sale.checkout_requested');
     expect(publishedEvent.event.payload.sale_id).toBe(sale.sale_id);
     expect(publishedEvent.event.payload.items).toHaveLength(1);
-    expect(publishedEvent.event.payload.items[0].product_id).toBe('product-123');
-    expect(publishedEvent.event.payload.items[0].sale_item_id).toBe(saleItem.sale_item_id);
+    expect(publishedEvent.event.payload.items[0].product_id).toBe(
+      'product-123',
+    );
+    expect(publishedEvent.event.payload.items[0].sale_item_id).toBe(
+      saleItem.sale_item_id,
+    );
     expect(publishedEvent.event.payload.items[0].quantity).toBe(2);
-    expect(publishedEvent.event.payload.items[0].unit_price_in_cents).toBe(1000);
+    expect(publishedEvent.event.payload.items[0].unit_price_in_cents).toBe(
+      1000,
+    );
     expect(publishedEvent.event.payload.occurred_at).toBeInstanceOf(Date);
   });
 });

@@ -1,7 +1,7 @@
-import { Module } from '@nestjs/common';
+import { Module } from "@nestjs/common";
 
-import { ProductsController } from './products.controller';
-import { ProductStockController } from './product-stock.controller';
+import { ProductsController } from "./products.controller";
+import { ProductStockController } from "./product-stock.controller";
 
 import {
   CreateProductUseCase,
@@ -13,12 +13,12 @@ import {
   ActivateProductUseCase,
   DeactivateProductUseCase,
   ReserveStockUseCase,
-} from '@/application/use-cases';
-import { SkuGeneratorService } from '@/application/services';
+} from "@/application/use-cases";
+import { SkuGeneratorService } from "@/application/services";
 
-import { DatabaseModule } from '@/infra/database';
-import { EnvService } from '@/infra/env';
-import { SkuGenerator } from '@/domain/services';
+import { DatabaseModule } from "@/infra/database";
+import { EnvService } from "@/infra/env";
+import { SkuGenerator } from "@/domain/services";
 
 @Module({
   imports: [DatabaseModule],

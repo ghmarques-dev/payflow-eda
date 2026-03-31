@@ -12,11 +12,11 @@ export type IStartSaleUseCaseOutput = Sale;
 
 @Injectable()
 export class StartSaleUseCase {
-  constructor(
-    private readonly salesRepository: SalesRepository
-  ) {}
+  constructor(private readonly salesRepository: SalesRepository) {}
 
-  async execute(input: IStartSaleUseCaseInput): Promise<IStartSaleUseCaseOutput> {
+  async execute(
+    input: IStartSaleUseCaseInput,
+  ): Promise<IStartSaleUseCaseOutput> {
     const sale = await this.salesRepository.createDraft({
       operator_id: input.operator_id,
       store_id: input.store_id,

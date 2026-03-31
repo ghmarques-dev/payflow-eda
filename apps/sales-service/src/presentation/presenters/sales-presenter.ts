@@ -1,4 +1,4 @@
-import { Sale } from '@/domain/entities'
+import { Sale } from '@/domain/entities';
 
 export class SalesPresenter {
   static toHTTP(sale: Sale) {
@@ -13,6 +13,6 @@ export class SalesPresenter {
       total_in_cents: sale.total_in_cents,
       created_at: sale.created_at,
       finished_at: sale.finished_at,
-    }
+    };
   }
 }

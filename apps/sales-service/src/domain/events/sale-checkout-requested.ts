@@ -3,7 +3,7 @@ import { randomUUID } from 'node:crypto';
 import {
   SALE_CHECKOUT_REQUESTED_EVENT_TYPE,
   type SaleCheckoutRequestedEventPayload,
-  type DomainEvent
+  type DomainEvent,
 } from '@payflow/contracts';
 
 const ORIGIN = 'sales-service';

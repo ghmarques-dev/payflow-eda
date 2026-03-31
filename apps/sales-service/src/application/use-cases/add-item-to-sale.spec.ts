@@ -1,4 +1,7 @@
-import { InMemorySalesRepository, InMemorySaleItemsRepository } from '../repositories/database';
+import {
+  InMemorySalesRepository,
+  InMemorySaleItemsRepository,
+} from '../repositories/database';
 
 import { SalesRepository } from '@/domain/repositories';
 import { SaleItemsRepository } from '@/domain/repositories/database';

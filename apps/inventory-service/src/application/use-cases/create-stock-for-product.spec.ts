@@ -1,18 +1,18 @@
 import {
   InMemoryProductRepository,
   InMemoryProductStockRepository,
-} from '../repositories/database';
-import { CreateStockForProductUseCase } from './create-stock-for-product';
+} from "../repositories/database";
+import { CreateStockForProductUseCase } from "./create-stock-for-product";
 import {
   ProductNotFoundError,
   ProductStockAlreadyExistsError,
-} from '@/application/errors';
+} from "@/application/errors";
 
 let productRepository: InMemoryProductRepository;
 let productStockRepository: InMemoryProductStockRepository;
 let sut: CreateStockForProductUseCase;
 
-describe('create stock for product use case', () => {
+describe("create stock for product use case", () => {
   beforeEach(async () => {
     productRepository = new InMemoryProductRepository();
     productStockRepository = new InMemoryProductStockRepository();
@@ -22,17 +22,17 @@ describe('create stock for product use case', () => {
     );
 
     await productRepository.create({
-      product_id: 'product-1',
-      store_id: 'store-1',
-      name: 'Potato',
-      description: 'A potato is a potato',
+      product_id: "product-1",
+      store_id: "store-1",
+      name: "Potato",
+      description: "A potato is a potato",
       price_in_cents: 1000,
       is_active: true,
-      sku: 'SKU-store-1-00000001',
+      sku: "SKU-store-1-00000001",
     });
   });
 
-  it('should be able to create stock for a product', async () => {
+  it("should be able to create stock for a product", async () => {
     const [product] = productRepository.items;
 
     const result = await sut.execute({
@@ -50,46 +50,51 @@ describe('create stock for product use case', () => {
     expect(result.created_at).toBeInstanceOf(Date);
   });
 
-  it('should call productRepository.findById with correct values', async () => {
-    const productRepositoryFindByIdSpy = jest.spyOn(productRepository, 'findById');
+  it("should call productRepository.findById with correct values", async () => {
+    const productRepositoryFindByIdSpy = jest.spyOn(
+      productRepository,
+      "findById",
+    );
 
     await sut.execute({
-      product_id: 'product-1',
+      product_id: "product-1",
       available_quantity: 10,
       reserved_quantity: 5,
     });
 
     expect(productRepositoryFindByIdSpy).toHaveBeenCalledWith({
-      product_id: 'product-1',
+      product_id: "product-1",
     });
   });
 
-  it('should throw ProductNotFoundError when product does not exist', async () => {
+  it("should throw ProductNotFoundError when product does not exist", async () => {
     await expect(
       sut.execute({
-        product_id: 'non-existent-product',
+        product_id: "non-existent-product",
         available_quantity: 10,
         reserved_quantity: 5,
       }),
     ).rejects.toThrow(ProductNotFoundError);
   });
 
-
-  it('should call productStockRepository.findByProductId with correct values', async () => {
-    const productStockRepositoryFindByProductIdSpy = jest.spyOn(productStockRepository, 'findByProductId');
+  it("should call productStockRepository.findByProductId with correct values", async () => {
+    const productStockRepositoryFindByProductIdSpy = jest.spyOn(
+      productStockRepository,
+      "findByProductId",
+    );
 
     await sut.execute({
-      product_id: 'product-1',
+      product_id: "product-1",
       available_quantity: 10,
       reserved_quantity: 5,
     });
 
     expect(productStockRepositoryFindByProductIdSpy).toHaveBeenCalledWith({
-      product_id: 'product-1',
+      product_id: "product-1",
     });
   });
 
-  it('should throw ProductStockAlreadyExistsError when stock already exists', async () => {
+  it("should throw ProductStockAlreadyExistsError when stock already exists", async () => {
     const [product] = productRepository.items;
 
     await sut.execute({
@@ -107,17 +112,20 @@ describe('create stock for product use case', () => {
     ).rejects.toThrow(ProductStockAlreadyExistsError);
   });
 
-  it('should call productStockRepository.create with correct values', async () => {
-    const productStockRepositoryCreateSpy = jest.spyOn(productStockRepository, 'create');
+  it("should call productStockRepository.create with correct values", async () => {
+    const productStockRepositoryCreateSpy = jest.spyOn(
+      productStockRepository,
+      "create",
+    );
 
     await sut.execute({
-      product_id: 'product-1',
+      product_id: "product-1",
       available_quantity: 10,
       reserved_quantity: 5,
     });
 
     expect(productStockRepositoryCreateSpy).toHaveBeenCalledWith({
-      product_id: 'product-1',
+      product_id: "product-1",
       available_quantity: 10,
       reserved_quantity: 5,
     });

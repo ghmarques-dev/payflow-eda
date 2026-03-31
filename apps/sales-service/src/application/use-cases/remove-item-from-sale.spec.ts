@@ -1,11 +1,17 @@
-import { InMemorySalesRepository, InMemorySaleItemsRepository } from '../repositories/database';
+import {
+  InMemorySalesRepository,
+  InMemorySaleItemsRepository,
+} from '../repositories/database';
 
 import { SalesRepository } from '@/domain/repositories';
 import { SaleItemsRepository } from '@/domain/repositories/database';
 
 import { RemoveItemFromSaleUseCase } from './remove-item-from-sale';
 import { SaleNotFoundError } from '../errors';
-import { SaleNotInDraftStatusError, SaleItemNotFoundError } from '../errors/errors';
+import {
+  SaleNotInDraftStatusError,
+  SaleItemNotFoundError,
+} from '../errors/errors';
 
 let salesRepository: SalesRepository;
 let saleItemsRepository: SaleItemsRepository;

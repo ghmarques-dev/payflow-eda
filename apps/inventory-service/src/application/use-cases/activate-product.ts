@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable } from "@nestjs/common";
 
-import { ProductRepository } from '@/domain/repositories/database';
-import type { Product } from '@/domain/entities';
-import { ProductNotFoundError } from '@/application/errors';
+import { ProductRepository } from "@/domain/repositories/database";
+import type { Product } from "@/domain/entities";
+import { ProductNotFoundError } from "@/application/errors";
 
 export type IActivateProductUseCaseInput = {
   product_id: string;

@@ -1,11 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable } from "@nestjs/common";
 
-import { ProductStockRepository } from '@/domain/repositories/database';
-import type { ProductStock } from '@/domain/entities';
+import { ProductStockRepository } from "@/domain/repositories/database";
+import type { ProductStock } from "@/domain/entities";
 import {
   ProductStockNotFoundError,
   InvalidQuantityError,
-} from '@/application/errors';
+} from "@/application/errors";
 
 export type IAddStockUseCaseInput = {
   product_id: string;
@@ -22,7 +22,7 @@ export class AddStockUseCase {
 
   async execute(input: IAddStockUseCaseInput): Promise<IAddStockUseCaseOutput> {
     if (input.quantity <= 0) {
-      throw new InvalidQuantityError('Quantity must be greater than 0');
+      throw new InvalidQuantityError("Quantity must be greater than 0");
     }
 
     const stock = await this.productStockRepository.findByProductId({

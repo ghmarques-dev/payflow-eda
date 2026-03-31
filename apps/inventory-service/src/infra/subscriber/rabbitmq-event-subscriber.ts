@@ -1,8 +1,8 @@
-import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
-import amqp, { Channel, ChannelModel, ConsumeMessage } from 'amqplib';
+import { Injectable, Logger, OnModuleDestroy } from "@nestjs/common";
+import amqp, { Channel, ChannelModel, ConsumeMessage } from "amqplib";
 
-import type { EventSubscriber } from '@/domain/services';
-import type { DomainEvent } from '@payflow/contracts';
+import type { EventSubscriber } from "@/domain/services";
+import type { DomainEvent } from "@payflow/contracts";
 import {
   RABBITMQ_DLQ_QUEUE,
   RABBITMQ_DLX_EXCHANGE,
@@ -12,20 +12,22 @@ import {
   RABBITMQ_MAIN_QUEUE,
   RABBITMQ_MAX_RETRIES,
   RABBITMQ_RETRY_HEADER,
-} from '@payflow/contracts';
-import { EnvService } from '@/infra/env';
+} from "@payflow/contracts";
+import { EnvService } from "@/infra/env";
 import {
   context,
   extractContextFromHeaders,
   SpanStatusCode,
   trace,
-} from '@payflow/telemetry';
+} from "@payflow/telemetry";
 
-function readRetryCount(headers: ConsumeMessage['properties']['headers']): number {
+function readRetryCount(
+  headers: ConsumeMessage["properties"]["headers"],
+): number {
   const raw = headers?.[RABBITMQ_RETRY_HEADER];
 
-  if (typeof raw === 'number' && !Number.isNaN(raw)) return raw;
-  if (typeof raw === 'string') {
+  if (typeof raw === "number" && !Number.isNaN(raw)) return raw;
+  if (typeof raw === "string") {
     const number = Number.parseInt(raw, 10);
     return Number.isNaN(number) ? 0 : number;
   }
@@ -33,7 +35,9 @@ function readRetryCount(headers: ConsumeMessage['properties']['headers']): numbe
 }
 
 @Injectable()
-export class RabbitMQEventSubscriber implements EventSubscriber, OnModuleDestroy {
+export class RabbitMQEventSubscriber
+  implements EventSubscriber, OnModuleDestroy
+{
   private readonly logger = new Logger(RabbitMQEventSubscriber.name);
 
   private connection: ChannelModel | null = null;
@@ -48,7 +52,11 @@ export class RabbitMQEventSubscriber implements EventSubscriber, OnModuleDestroy
   async subscribe(input: EventSubscriber.Subscribe.Input): Promise<void> {
     const channel = await this.getChannel();
 
-    await channel.bindQueue(RABBITMQ_MAIN_QUEUE, RABBITMQ_EXCHANGE_NAME, input.routing_key);
+    await channel.bindQueue(
+      RABBITMQ_MAIN_QUEUE,
+      RABBITMQ_EXCHANGE_NAME,
+      input.routing_key,
+    );
 
     await channel.consume(
       RABBITMQ_MAIN_QUEUE,
@@ -60,32 +68,47 @@ export class RabbitMQEventSubscriber implements EventSubscriber, OnModuleDestroy
         );
 
         await context.with(parentContext, async () => {
-          const messagingTracer = trace.getTracer('payflow.inventory.messaging');
+          const messagingTracer = trace.getTracer(
+            "payflow.inventory.messaging",
+          );
 
           await messagingTracer.startActiveSpan(
-            'rabbitmq.consume',
+            "rabbitmq.consume",
             {
               attributes: {
-                'messaging.system': 'rabbitmq',
-                'messaging.destination.name': msg.fields.routingKey,
-                'messaging.operation': 'process',
+                "messaging.system": "rabbitmq",
+                "messaging.destination.name": msg.fields.routingKey,
+                "messaging.operation": "process",
               },
             },
             async (span) => {
               try {
-                const content = JSON.parse(msg.content.toString()) as DomainEvent;
-                span.setAttribute('payflow.event_type', content.event_type);
+                const content = JSON.parse(
+                  msg.content.toString(),
+                ) as DomainEvent;
+                span.setAttribute("payflow.event_type", content.event_type);
+
                 await input.handler(content.payload);
+
                 span.setStatus({ code: SpanStatusCode.OK });
                 channel.ack(msg);
               } catch (err) {
-                const error = err instanceof Error ? err : new Error(String(err));
+                const error =
+                  err instanceof Error ? err : new Error(String(err));
+
                 span.recordException(error);
-                span.setStatus({ code: SpanStatusCode.ERROR, message: error.message });
+                span.setStatus({
+                  code: SpanStatusCode.ERROR,
+                  message: error.message,
+                });
+
                 this.logger.warn(
                   `Handler failed (routingKey=${msg.fields.routingKey}): ${error.message}`,
                 );
+
                 await this.handleFailure(channel, msg);
+              } finally {
+                span.end();
               }
             },
           );
@@ -95,7 +118,10 @@ export class RabbitMQEventSubscriber implements EventSubscriber, OnModuleDestroy
     );
   }
 
-  private async handleFailure(channel: Channel, msg: ConsumeMessage): Promise<void> {
+  private async handleFailure(
+    channel: Channel,
+    msg: ConsumeMessage,
+  ): Promise<void> {
     const retryCount = readRetryCount(msg.properties.headers);
 
     if (retryCount < RABBITMQ_MAX_RETRIES) {
@@ -110,7 +136,7 @@ export class RabbitMQEventSubscriber implements EventSubscriber, OnModuleDestroy
         msg.content,
         {
           persistent: true,
-          contentType: msg.properties.contentType ?? 'application/json',
+          contentType: msg.properties.contentType ?? "application/json",
           messageId: msg.properties.messageId,
           timestamp: msg.properties.timestamp,
           headers: {
@@ -134,7 +160,7 @@ export class RabbitMQEventSubscriber implements EventSubscriber, OnModuleDestroy
       return this.channel;
     }
 
-    const rabbitUrl = this.env.get('RABBITMQ_URL');
+    const rabbitUrl = this.env.get("RABBITMQ_URL");
     const connection = await amqp.connect(rabbitUrl);
     this.connection = connection;
 
@@ -143,22 +169,32 @@ export class RabbitMQEventSubscriber implements EventSubscriber, OnModuleDestroy
 
     channel.prefetch(1);
 
-    await channel.assertExchange(RABBITMQ_EXCHANGE_NAME, RABBITMQ_EXCHANGE_TYPE, {
+    await channel.assertExchange(
+      RABBITMQ_EXCHANGE_NAME,
+      RABBITMQ_EXCHANGE_TYPE,
+      {
+        durable: true,
+      },
+    );
+
+    await channel.assertExchange(RABBITMQ_DLX_EXCHANGE, "direct", {
       durable: true,
     });
-
-    await channel.assertExchange(RABBITMQ_DLX_EXCHANGE, 'direct', { durable: true });
 
     await channel.assertQueue(RABBITMQ_MAIN_QUEUE, {
       durable: true,
       arguments: {
-        'x-dead-letter-exchange': RABBITMQ_DLX_EXCHANGE,
-        'x-dead-letter-routing-key': RABBITMQ_DLX_ROUTING_KEY,
+        "x-dead-letter-exchange": RABBITMQ_DLX_EXCHANGE,
+        "x-dead-letter-routing-key": RABBITMQ_DLX_ROUTING_KEY,
       },
     });
 
     await channel.assertQueue(RABBITMQ_DLQ_QUEUE, { durable: true });
-    await channel.bindQueue(RABBITMQ_DLQ_QUEUE, RABBITMQ_DLX_EXCHANGE, RABBITMQ_DLX_ROUTING_KEY);
+    await channel.bindQueue(
+      RABBITMQ_DLQ_QUEUE,
+      RABBITMQ_DLX_EXCHANGE,
+      RABBITMQ_DLX_ROUTING_KEY,
+    );
 
     return channel;
   }

@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable } from "@nestjs/common";
 
-import { PrismaService } from './prisma.service';
-import { ProductRepository } from '@/domain/repositories/database';
-import type { Product } from '@/domain/entities';
+import { PrismaService } from "./prisma.service";
+import { ProductRepository } from "@/domain/repositories/database";
+import type { Product } from "@/domain/entities";
 
 @Injectable()
 export class PrismaProductRepository implements ProductRepository {
@@ -32,7 +32,9 @@ export class PrismaProductRepository implements ProductRepository {
       where: { product_id: input.product_id },
       data: {
         ...(input.name !== undefined && { name: input.name }),
-        ...(input.description !== undefined && { description: input.description }),
+        ...(input.description !== undefined && {
+          description: input.description,
+        }),
         ...(input.price_in_cents !== undefined && {
           price_in_cents: input.price_in_cents,
         }),

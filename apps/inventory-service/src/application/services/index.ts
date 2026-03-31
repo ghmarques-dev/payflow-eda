@@ -1,1 +1,1 @@
-export * from './sku-generator.service';
+export * from "./sku-generator.service";

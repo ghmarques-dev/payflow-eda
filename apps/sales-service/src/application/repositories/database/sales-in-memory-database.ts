@@ -7,7 +7,7 @@ export class InMemorySalesRepository implements SalesRepository {
   private sales: Sale[] = [];
 
   async createDraft(
-    input: SalesRepository.CreateDraft.Input
+    input: SalesRepository.CreateDraft.Input,
   ): Promise<SalesRepository.CreateDraft.Output> {
     const sale: Sale = {
       sale_id: input.sale_id ?? randomUUID(),
@@ -16,7 +16,7 @@ export class InMemorySalesRepository implements SalesRepository {
       status: input.status,
       items: [],
       created_at: new Date(),
-    }
+    };
 
     this.sales.push(sale);
 
@@ -24,9 +24,11 @@ export class InMemorySalesRepository implements SalesRepository {
   }
 
   async update(
-    input: SalesRepository.Update.Input
+    input: SalesRepository.Update.Input,
   ): Promise<SalesRepository.Update.Output> {
-    const saleToUpdate = this.sales.find(sale => sale.sale_id === input.sale_id);
+    const saleToUpdate = this.sales.find(
+      (sale) => sale.sale_id === input.sale_id,
+    );
 
     if (!saleToUpdate) {
       throw new Error('Sale not found');
@@ -34,16 +36,17 @@ export class InMemorySalesRepository implements SalesRepository {
 
     Object.assign(saleToUpdate, input.data);
 
-    this.sales = 
-      this.sales.map(sale => sale.sale_id === input.sale_id ? saleToUpdate : sale);
+    this.sales = this.sales.map((sale) =>
+      sale.sale_id === input.sale_id ? saleToUpdate : sale,
+    );
 
     return saleToUpdate;
   }
 
   async findById(
-    input: SalesRepository.FindById.Input
+    input: SalesRepository.FindById.Input,
   ): Promise<SalesRepository.FindById.Output> {
-    const sale = this.sales.find(sale => sale.sale_id === input.sale_id);
+    const sale = this.sales.find((sale) => sale.sale_id === input.sale_id);
 
     return sale ?? null;
   }

@@ -15,10 +15,7 @@ import { EnvService } from '@/infra/env';
 import { MessagingModule } from '@/infra/messaging';
 
 @Module({
-  imports: [
-    DatabaseModule,
-    MessagingModule
-  ],
+  imports: [DatabaseModule, MessagingModule],
   controllers: [SalesController],
   providers: [
     EnvService,

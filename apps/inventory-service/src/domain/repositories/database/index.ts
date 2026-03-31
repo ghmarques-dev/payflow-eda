@@ -1,2 +1,2 @@
-export * from './product-repository';
-export * from './product-stock-repository';
+export * from "./product-repository";
+export * from "./product-stock-repository";

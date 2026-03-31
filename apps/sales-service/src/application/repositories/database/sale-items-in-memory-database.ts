@@ -7,7 +7,7 @@ export class InMemorySaleItemsRepository implements SaleItemsRepository {
   private saleItems: SaleItem[] = [];
 
   async create(
-    input: SaleItemsRepository.Create.Input
+    input: SaleItemsRepository.Create.Input,
   ): Promise<SaleItemsRepository.Create.Output> {
     const saleItem: SaleItem = {
       sale_item_id: input.sale_item_id ?? randomUUID(),
@@ -24,10 +24,10 @@ export class InMemorySaleItemsRepository implements SaleItemsRepository {
   }
 
   async update(
-    input: SaleItemsRepository.Update.Input
+    input: SaleItemsRepository.Update.Input,
   ): Promise<SaleItemsRepository.Update.Output> {
     const saleItemToUpdate = this.saleItems.find(
-      item => item.sale_item_id === input.sale_item_id
+      (item) => item.sale_item_id === input.sale_item_id,
     );
 
     if (!saleItemToUpdate) {
@@ -36,28 +36,28 @@ export class InMemorySaleItemsRepository implements SaleItemsRepository {
 
     Object.assign(saleItemToUpdate, input.data);
 
-    this.saleItems = this.saleItems.map(item =>
-      item.sale_item_id === input.sale_item_id ? saleItemToUpdate : item
+    this.saleItems = this.saleItems.map((item) =>
+      item.sale_item_id === input.sale_item_id ? saleItemToUpdate : item,
     );
 
     return saleItemToUpdate;
   }
 
   async findById(
-    input: SaleItemsRepository.FindById.Input
+    input: SaleItemsRepository.FindById.Input,
   ): Promise<SaleItemsRepository.FindById.Output> {
     const saleItem = this.saleItems.find(
-      item => item.sale_item_id === input.sale_item_id
+      (item) => item.sale_item_id === input.sale_item_id,
     );
 
     return saleItem ?? null;
   }
 
   async delete(
-    input: SaleItemsRepository.Delete.Input
+    input: SaleItemsRepository.Delete.Input,
   ): Promise<SaleItemsRepository.Delete.Output> {
     const saleItemIndex = this.saleItems.findIndex(
-      item => item.sale_item_id === input.sale_item_id
+      (item) => item.sale_item_id === input.sale_item_id,
     );
 
     if (saleItemIndex === -1) {
@@ -68,10 +68,8 @@ export class InMemorySaleItemsRepository implements SaleItemsRepository {
   }
 
   async findBySaleId(
-    input: SaleItemsRepository.FindBySaleId.Input
+    input: SaleItemsRepository.FindBySaleId.Input,
   ): Promise<SaleItemsRepository.FindBySaleId.Output> {
-    return this.saleItems.filter(
-      item => item.sale_id === input.sale_id
-    );
+    return this.saleItems.filter((item) => item.sale_id === input.sale_id);
   }
 }

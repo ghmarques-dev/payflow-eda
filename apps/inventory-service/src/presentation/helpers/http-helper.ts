@@ -1,6 +1,6 @@
-import { HttpStatus } from '@nestjs/common';
+import { HttpStatus } from "@nestjs/common";
 
-import { HttpResponse } from '@/presentation/protocols';
+import { HttpResponse } from "@/presentation/protocols";
 
 export const HttpSuccessResponse = (data: any): HttpResponse => {
   return {
@@ -50,8 +50,8 @@ export const HttpInternalServerError = (details: string): HttpResponse => {
   return {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     error: {
-      code: 'InternalServerError',
-      message: 'An unexpected error occurred',
+      code: "InternalServerError",
+      message: "An unexpected error occurred",
       details,
     },
   };

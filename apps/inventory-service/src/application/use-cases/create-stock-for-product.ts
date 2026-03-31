@@ -1,17 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable } from "@nestjs/common";
 
 import {
   ProductRepository,
   ProductStockRepository,
-} from '@/domain/repositories/database';
-import type { ProductStock } from '@/domain/entities';
+} from "@/domain/repositories/database";
+import type { ProductStock } from "@/domain/entities";
 import {
   ProductNotFoundError,
   ProductStockAlreadyExistsError,
-} from '@/application/errors';
+} from "@/application/errors";
 
 export type ICreateStockForProductUseCaseInput = {
-  product_id: string; 
+  product_id: string;
   available_quantity: number;
   reserved_quantity?: number;
 };

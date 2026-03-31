@@ -1,11 +1,11 @@
-import { Module } from '@nestjs/common';
+import { Module } from "@nestjs/common";
 
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule } from "@nestjs/config";
 
-import { ControllersModule } from '@/presentation/controllers';
+import { ControllersModule } from "@/presentation/controllers";
 
-import { EnvModule, envSchema } from '@/infra/env';
-import { SubscriberModule } from '@/infra/subscriber';
+import { EnvModule, envSchema } from "@/infra/env";
+import { SubscriberModule } from "@/infra/subscriber";
 
 @Module({
   imports: [

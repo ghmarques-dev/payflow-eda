@@ -5,10 +5,10 @@ import {
   SalesRepository,
 } from '@/domain/repositories/database';
 import { SaleNotFoundError } from '../errors';
-import { 
+import {
   SaleNotInDraftStatusError,
   SaleWithoutItemsError,
-  SaleWithInvalidTotalError
+  SaleWithInvalidTotalError,
 } from '../errors/errors';
 import { EventPublisher } from '../ports';
 import { SaleCheckoutRequestedEvent } from '@/domain/events';
@@ -24,10 +24,12 @@ export class CheckoutSaleUseCase {
   constructor(
     private readonly salesRepository: SalesRepository,
     private readonly saleItemsRepository: SaleItemsRepository,
-    private readonly eventPublisher: EventPublisher
+    private readonly eventPublisher: EventPublisher,
   ) {}
 
-  async execute(input: ICheckoutSaleUseCaseInput): Promise<ICheckoutSaleUseCaseOutput> {
+  async execute(
+    input: ICheckoutSaleUseCaseInput,
+  ): Promise<ICheckoutSaleUseCaseOutput> {
     const saleExists = await this.salesRepository.findById({
       sale_id: input.sale_id,
     });
@@ -65,7 +67,7 @@ export class CheckoutSaleUseCase {
 
     const event = new SaleCheckoutRequestedEvent({
       sale_id: saleExists.sale_id,
-      items: saleItems.map(item => ({
+      items: saleItems.map((item) => ({
         sale_item_id: item.sale_item_id,
         product_id: item.product_id,
         quantity: item.quantity,

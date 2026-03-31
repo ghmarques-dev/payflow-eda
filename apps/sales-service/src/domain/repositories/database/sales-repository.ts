@@ -2,15 +2,15 @@ import type { Sale, SaleStatus } from '../../entities';
 
 export abstract class SalesRepository {
   abstract createDraft(
-    input: SalesRepository.CreateDraft.Input
+    input: SalesRepository.CreateDraft.Input,
   ): Promise<SalesRepository.CreateDraft.Output>;
 
   abstract update(
-    input: SalesRepository.Update.Input
+    input: SalesRepository.Update.Input,
   ): Promise<SalesRepository.Update.Output>;
 
   abstract findById(
-    input: SalesRepository.FindById.Input
+    input: SalesRepository.FindById.Input,
   ): Promise<SalesRepository.FindById.Output>;
 }
 

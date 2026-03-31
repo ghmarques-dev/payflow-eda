@@ -1,24 +1,24 @@
-import type { SaleItem } from "@/domain/entities";
+import type { SaleItem } from '@/domain/entities';
 
 export abstract class SaleItemsRepository {
   abstract create(
-    input: SaleItemsRepository.Create.Input
+    input: SaleItemsRepository.Create.Input,
   ): Promise<SaleItemsRepository.Create.Output>;
 
   abstract update(
-    input: SaleItemsRepository.Update.Input
+    input: SaleItemsRepository.Update.Input,
   ): Promise<SaleItemsRepository.Update.Output>;
 
   abstract findById(
-    input: SaleItemsRepository.FindById.Input
+    input: SaleItemsRepository.FindById.Input,
   ): Promise<SaleItemsRepository.FindById.Output>;
 
   abstract delete(
-    input: SaleItemsRepository.Delete.Input
+    input: SaleItemsRepository.Delete.Input,
   ): Promise<SaleItemsRepository.Delete.Output>;
 
   abstract findBySaleId(
-    input: SaleItemsRepository.FindBySaleId.Input
+    input: SaleItemsRepository.FindBySaleId.Input,
   ): Promise<SaleItemsRepository.FindBySaleId.Output>;
 }
 

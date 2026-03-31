@@ -1,6 +1,10 @@
-import type { SaleItem } from "./sale-item";
+import type { SaleItem } from './sale-item';
 
-export type SaleStatus = 'DRAFT' | 'CHECKOUT_PENDING' | 'COMPLETED' | 'CANCELLED';
+export type SaleStatus =
+  | 'DRAFT'
+  | 'CHECKOUT_PENDING'
+  | 'COMPLETED'
+  | 'CANCELLED';
 export interface Sale {
   sale_id: string;
   operator_id: string;

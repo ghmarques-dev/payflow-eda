@@ -15,19 +15,8 @@ import { MessagingModule } from '@/infra/messaging';
 import { EnvService } from '@/infra/env';
 
 @Module({
-  imports: [
-    AuthModule,
-    DatabaseModule,
-    CryptographyModule,
-    MessagingModule,
-  ],
+  imports: [AuthModule, DatabaseModule, CryptographyModule, MessagingModule],
   controllers: [UsersController],
-  providers: [
-    EnvService,
-
-    SignUpUseCase,
-    SignInUseCase,
-    RefreshTokenUseCase,
-  ],
+  providers: [EnvService, SignUpUseCase, SignInUseCase, RefreshTokenUseCase],
 })
 export class ControllersModule {}

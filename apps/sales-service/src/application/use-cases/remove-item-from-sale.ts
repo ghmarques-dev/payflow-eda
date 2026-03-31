@@ -5,7 +5,10 @@ import {
   SalesRepository,
 } from '@/domain/repositories/database';
 import { SaleNotFoundError } from '../errors';
-import { SaleNotInDraftStatusError, SaleItemNotFoundError } from '../errors/errors';
+import {
+  SaleNotInDraftStatusError,
+  SaleItemNotFoundError,
+} from '../errors/errors';
 
 export type IRemoveItemFromSaleUseCaseInput = {
   sale_id: string;
@@ -18,10 +21,12 @@ export type IRemoveItemFromSaleUseCaseOutput = void;
 export class RemoveItemFromSaleUseCase {
   constructor(
     private readonly salesRepository: SalesRepository,
-    private readonly saleItemsRepository: SaleItemsRepository
+    private readonly saleItemsRepository: SaleItemsRepository,
   ) {}
 
-  async execute(input: IRemoveItemFromSaleUseCaseInput): Promise<IRemoveItemFromSaleUseCaseOutput> {
+  async execute(
+    input: IRemoveItemFromSaleUseCaseInput,
+  ): Promise<IRemoveItemFromSaleUseCaseOutput> {
     const saleExists = await this.salesRepository.findById({
       sale_id: input.sale_id,
     });
@@ -53,7 +58,7 @@ export class RemoveItemFromSaleUseCase {
     });
 
     const itemValueInCents = saleItem.unit_price_in_cents * saleItem.quantity;
-    const newSubtotalInCents = 
+    const newSubtotalInCents =
       (saleExists.subtotal_in_cents ?? 0) - itemValueInCents;
 
     await this.salesRepository.update({

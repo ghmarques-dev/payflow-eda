@@ -1,12 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable } from "@nestjs/common";
 
-import { ProductStockRepository } from '@/domain/repositories/database';
-import type { ProductStock } from '@/domain/entities';
+import { ProductStockRepository } from "@/domain/repositories/database";
+import type { ProductStock } from "@/domain/entities";
 import {
   ProductStockNotFoundError,
   InvalidQuantityError,
   InsufficientReservedQuantityError,
-} from '@/application/errors';
+} from "@/application/errors";
 
 export type IConfirmReservationUseCaseInput = {
   product_id: string;
@@ -25,7 +25,7 @@ export class ConfirmReservationUseCase {
     input: IConfirmReservationUseCaseInput,
   ): Promise<IConfirmReservationUseCaseOutput> {
     if (input.quantity <= 0) {
-      throw new InvalidQuantityError('Quantity must be greater than 0');
+      throw new InvalidQuantityError("Quantity must be greater than 0");
     }
 
     const stock = await this.productStockRepository.findByProductId({

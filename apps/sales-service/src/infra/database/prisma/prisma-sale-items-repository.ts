@@ -8,7 +8,7 @@ export class PrismaSaleItemsRepository implements SaleItemsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(
-    input: SaleItemsRepository.Create.Input
+    input: SaleItemsRepository.Create.Input,
   ): Promise<SaleItemsRepository.Create.Output> {
     const saleItem = await this.prisma.saleItem.create({
       data: input,
@@ -18,7 +18,7 @@ export class PrismaSaleItemsRepository implements SaleItemsRepository {
   }
 
   async update(
-    input: SaleItemsRepository.Update.Input
+    input: SaleItemsRepository.Update.Input,
   ): Promise<SaleItemsRepository.Update.Output> {
     const saleItem = await this.prisma.saleItem.update({
       where: { sale_item_id: input.sale_item_id },
@@ -29,7 +29,7 @@ export class PrismaSaleItemsRepository implements SaleItemsRepository {
   }
 
   async findById(
-    input: SaleItemsRepository.FindById.Input
+    input: SaleItemsRepository.FindById.Input,
   ): Promise<SaleItemsRepository.FindById.Output> {
     const saleItem = await this.prisma.saleItem.findUnique({
       where: { sale_item_id: input.sale_item_id },
@@ -39,7 +39,7 @@ export class PrismaSaleItemsRepository implements SaleItemsRepository {
   }
 
   async delete(
-    input: SaleItemsRepository.Delete.Input
+    input: SaleItemsRepository.Delete.Input,
   ): Promise<SaleItemsRepository.Delete.Output> {
     await this.prisma.saleItem.delete({
       where: { sale_item_id: input.sale_item_id },
@@ -47,7 +47,7 @@ export class PrismaSaleItemsRepository implements SaleItemsRepository {
   }
 
   async findBySaleId(
-    input: SaleItemsRepository.FindBySaleId.Input
+    input: SaleItemsRepository.FindBySaleId.Input,
   ): Promise<SaleItemsRepository.FindBySaleId.Output> {
     const saleItems = await this.prisma.saleItem.findMany({
       where: { sale_id: input.sale_id },

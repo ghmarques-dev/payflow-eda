@@ -1,1 +1,1 @@
-export * from './zod-validator-pipe';
+export * from "./zod-validator-pipe";

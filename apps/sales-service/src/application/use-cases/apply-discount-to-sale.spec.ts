@@ -4,7 +4,10 @@ import { SalesRepository } from '@/domain/repositories';
 
 import { ApplyDiscountToSaleUseCase } from './apply-discount-to-sale';
 import { SaleNotFoundError } from '../errors';
-import { SaleNotInDraftStatusError, InvalidDiscountError } from '../errors/errors';
+import {
+  SaleNotInDraftStatusError,
+  InvalidDiscountError,
+} from '../errors/errors';
 
 let salesRepository: SalesRepository;
 let sut: ApplyDiscountToSaleUseCase;

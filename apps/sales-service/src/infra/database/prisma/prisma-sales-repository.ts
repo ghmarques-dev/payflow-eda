@@ -12,7 +12,7 @@ export class PrismaSalesRepository implements SalesRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async createDraft(
-    input: SalesRepository.CreateDraft.Input
+    input: SalesRepository.CreateDraft.Input,
   ): Promise<SalesRepository.CreateDraft.Output> {
     const sale = await this.prisma.sale.create({
       data: {
@@ -24,12 +24,12 @@ export class PrismaSalesRepository implements SalesRepository {
         total_in_cents: 0,
       },
     });
-   
+
     return this.toDomain(sale);
   }
 
   async update(
-    input: SalesRepository.Update.Input
+    input: SalesRepository.Update.Input,
   ): Promise<SalesRepository.Update.Output> {
     const sale = await this.prisma.sale.update({
       where: { sale_id: input.sale_id },
@@ -43,14 +43,14 @@ export class PrismaSalesRepository implements SalesRepository {
 
     return this.toDomain(sale);
   }
-  
+
   async findById(
-    input: SalesRepository.FindById.Input
+    input: SalesRepository.FindById.Input,
   ): Promise<SalesRepository.FindById.Output> {
     const sale = await this.prisma.sale.findUnique({
       where: { sale_id: input.sale_id },
     });
-    
+
     return sale ? this.toDomain(sale) : null;
   }
 

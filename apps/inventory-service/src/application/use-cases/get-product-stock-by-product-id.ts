@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable } from "@nestjs/common";
 
-import { ProductStockRepository } from '@/domain/repositories/database';
-import type { ProductStock } from '@/domain/entities';
-import { ProductStockNotFoundError } from '@/application/errors';
+import { ProductStockRepository } from "@/domain/repositories/database";
+import type { ProductStock } from "@/domain/entities";
+import { ProductStockNotFoundError } from "@/application/errors";
 
 export type IGetProductStockByProductIdUseCaseInput = {
   product_id: string;

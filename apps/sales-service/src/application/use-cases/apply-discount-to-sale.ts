@@ -14,11 +14,11 @@ export type IApplyDiscountToSaleUseCaseOutput = void;
 
 @Injectable()
 export class ApplyDiscountToSaleUseCase {
-  constructor(
-    private readonly salesRepository: SalesRepository
-  ) {}
+  constructor(private readonly salesRepository: SalesRepository) {}
 
-  async execute(input: IApplyDiscountToSaleUseCaseInput): Promise<IApplyDiscountToSaleUseCaseOutput> {
+  async execute(
+    input: IApplyDiscountToSaleUseCaseInput,
+  ): Promise<IApplyDiscountToSaleUseCaseOutput> {
     const saleExists = await this.salesRepository.findById({
       sale_id: input.sale_id,
     });
@@ -40,7 +40,9 @@ export class ApplyDiscountToSaleUseCase {
     const subtotalInCents = saleExists.subtotal_in_cents ?? 0;
 
     if (input.discount_in_cents > subtotalInCents) {
-      throw new InvalidDiscountError('Discount cannot be greater than subtotal');
+      throw new InvalidDiscountError(
+        'Discount cannot be greater than subtotal',
+      );
     }
 
     const newTotalInCents = subtotalInCents - input.discount_in_cents;

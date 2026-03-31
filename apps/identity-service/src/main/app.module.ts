@@ -13,7 +13,7 @@ import { EnvModule, envSchema } from '@/infra/env';
       isGlobal: true,
     }),
     EnvModule,
-    ControllersModule
+    ControllersModule,
   ],
   controllers: [],
   providers: [],

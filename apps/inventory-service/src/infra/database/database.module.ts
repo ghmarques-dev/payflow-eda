@@ -1,14 +1,17 @@
-import { Module } from '@nestjs/common';
-import { PrismaService } from './prisma/prisma.service';
+import { Module } from "@nestjs/common";
+import { PrismaService } from "./prisma/prisma.service";
 
 import {
   PrismaProductRepository,
   PrismaProductStockRepository,
-} from './prisma';
+} from "./prisma";
 
-import { ProductRepository, ProductStockRepository } from '@/domain/repositories';
+import {
+  ProductRepository,
+  ProductStockRepository,
+} from "@/domain/repositories";
 
-import { EnvModule } from '../env';
+import { EnvModule } from "../env";
 
 @Module({
   imports: [EnvModule],
@@ -23,10 +26,6 @@ import { EnvModule } from '../env';
       useClass: PrismaProductStockRepository,
     },
   ],
-  exports: [
-    PrismaService,
-    ProductRepository,
-    ProductStockRepository,
-  ],
+  exports: [PrismaService, ProductRepository, ProductStockRepository],
 })
 export class DatabaseModule {}

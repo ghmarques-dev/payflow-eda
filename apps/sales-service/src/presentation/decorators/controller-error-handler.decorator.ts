@@ -24,9 +24,11 @@ export function ControllerErrorHandlerDecorator() {
         }
 
         if (
-          ['SaleNotFoundError', 'SaleItemNotFoundError', 'SaleAlreadyExistsError'].includes(
-            error.name,
-          )
+          [
+            'SaleNotFoundError',
+            'SaleItemNotFoundError',
+            'SaleAlreadyExistsError',
+          ].includes(error.name)
         ) {
           throw new NotFoundException(HttpNotFoundError(error));
         }

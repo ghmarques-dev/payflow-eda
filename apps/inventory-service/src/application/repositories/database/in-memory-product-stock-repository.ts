@@ -1,7 +1,7 @@
-import { randomUUID } from 'node:crypto';
+import { randomUUID } from "node:crypto";
 
-import type { ProductStock } from '@/domain/entities';
-import { ProductStockRepository } from '@/domain/repositories/database';
+import type { ProductStock } from "@/domain/entities";
+import { ProductStockRepository } from "@/domain/repositories/database";
 
 export class InMemoryProductStockRepository implements ProductStockRepository {
   public items: ProductStock[] = [];
@@ -29,7 +29,7 @@ export class InMemoryProductStockRepository implements ProductStockRepository {
       (s) => s.product_stock_id === input.product_stock_id,
     );
     if (index === -1) {
-      throw new Error('ProductStock not found');
+      throw new Error("ProductStock not found");
     }
 
     const updated: ProductStock = {
@@ -55,8 +55,6 @@ export class InMemoryProductStockRepository implements ProductStockRepository {
   async findByProductId(
     input: ProductStockRepository.FindByProductId.Input,
   ): Promise<ProductStockRepository.FindByProductId.Output> {
-    return (
-      this.items.find((s) => s.product_id === input.product_id) ?? null
-    );
+    return this.items.find((s) => s.product_id === input.product_id) ?? null;
   }
 }

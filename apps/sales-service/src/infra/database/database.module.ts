@@ -20,10 +20,6 @@ import { EnvModule } from '../env';
       useClass: PrismaSaleItemsRepository,
     },
   ],
-  exports: [
-    PrismaService, 
-    SalesRepository, 
-    SaleItemsRepository
-  ],
+  exports: [PrismaService, SalesRepository, SaleItemsRepository],
 })
 export class DatabaseModule {}

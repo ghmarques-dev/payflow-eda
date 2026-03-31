@@ -1,6 +1,9 @@
-import { UseCaseError } from '../use-case-error';
+import { UseCaseError } from "../use-case-error";
 
-export class InsufficientReservedQuantityError extends Error implements UseCaseError {
+export class InsufficientReservedQuantityError
+  extends Error
+  implements UseCaseError
+{
   constructor(
     public readonly reserved: number,
     public readonly requested: number,
@@ -8,6 +11,6 @@ export class InsufficientReservedQuantityError extends Error implements UseCaseE
     super(
       `Insufficient reserved quantity. Reserved: ${reserved}, requested: ${requested}`,
     );
-    this.name = 'InsufficientReservedQuantityError';
+    this.name = "InsufficientReservedQuantityError";
   }
 }

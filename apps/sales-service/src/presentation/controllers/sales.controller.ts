@@ -6,9 +6,7 @@ import {
   HttpCreatedResponse,
   HttpSuccessResponse,
 } from '@/presentation/helpers';
-import {
-  ControllerErrorHandlerDecorator,
-} from '@/presentation/decorators';
+import { ControllerErrorHandlerDecorator } from '@/presentation/decorators';
 import {
   StartSaleUseCase,
   AddItemToSaleUseCase,
@@ -51,7 +49,9 @@ export class SalesController {
 
   @Post()
   @ControllerErrorHandlerDecorator()
-  async startSale(@Body(new ZodValidationPipe(startSaleSchema)) body: StartSaleSchema) {
+  async startSale(
+    @Body(new ZodValidationPipe(startSaleSchema)) body: StartSaleSchema,
+  ) {
     const response = await this.startSaleUseCase.execute({
       operator_id: body.operator_id,
       store_id: body.store_id,
@@ -66,7 +66,8 @@ export class SalesController {
   @ControllerErrorHandlerDecorator()
   async addItemToSale(
     @Param('sale_id') sale_id: string,
-    @Body(new ZodValidationPipe(addItemToSaleBodySchema)) body: AddItemToSaleBodySchema,
+    @Body(new ZodValidationPipe(addItemToSaleBodySchema))
+    body: AddItemToSaleBodySchema,
   ) {
     const response = await this.addItemToSaleUseCase.execute({
       sale_id: sale_id,
@@ -98,7 +99,8 @@ export class SalesController {
   @ControllerErrorHandlerDecorator()
   async applyDiscountToSale(
     @Param('sale_id') sale_id: string,
-    @Body(new ZodValidationPipe(applyDiscountToSaleSchema)) body: ApplyDiscountToSaleSchema,
+    @Body(new ZodValidationPipe(applyDiscountToSaleSchema))
+    body: ApplyDiscountToSaleSchema,
   ) {
     await this.applyDiscountToSaleUseCase.execute({
       sale_id: sale_id,
@@ -110,13 +112,13 @@ export class SalesController {
 
   @Post(':sale_id/checkout')
   @ControllerErrorHandlerDecorator()
-  async checkoutSale(
-    @Param('sale_id') sale_id: string,
-  ) {
+  async checkoutSale(@Param('sale_id') sale_id: string) {
     await this.checkoutSaleUseCase.execute({
       sale_id: sale_id,
     });
 
-    return HttpSuccessResponse({ message: 'Sale checkout requested successfully' });
+    return HttpSuccessResponse({
+      message: 'Sale checkout requested successfully',
+    });
   }
 }
